@@ -12,7 +12,7 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/essentialkaos/ek/req"
+	"pkg.re/essentialkaos/ek.v1/req"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
