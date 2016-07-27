@@ -74,7 +74,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(info.Host, check.Equals, "https://api.ssllabs.com")
 	c.Assert(info.Port, check.Equals, 443)
 	c.Assert(info.Protocol, check.Equals, "HTTP")
-	c.Assert(info.IsPublic, check.Equals, false)
+	c.Assert(info.IsPublic, check.Equals, true)
 	c.Assert(info.Status, check.Equals, "READY")
 	c.Assert(info.Endpoints, check.Not(check.HasLen), 0)
 
