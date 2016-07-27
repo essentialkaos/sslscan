@@ -45,9 +45,6 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	progress, err := api.Analyze(
 		"https://api.ssllabs.com",
-		AnalyzeParams{
-			StartNew: true,
-		},
 	)
 
 	c.Assert(progress, check.NotNil)
