@@ -92,6 +92,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	detailedInfo, err := progress.DetailedInfo(info.Endpoints[0].IPAdress)
 
+	c.Assert(err, check.IsNil)
 	c.Assert(detailedInfo, check.NotNil)
 	c.Assert(detailedInfo.Details, check.NotNil)
 
