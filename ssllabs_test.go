@@ -55,6 +55,8 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	var info *AnalyzeInfo
 
+	start := time.Now()
+
 	for {
 		info, err = progress.Info()
 
@@ -69,7 +71,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 			break
 		}
 
-		fmt.Printf("→ %s : %s\n", info.Status, info.StatusMessage)
+		fmt.Printf("→ %s (%s)\n", info.Status, time.Since(start))
 
 		time.Sleep(5 * time.Second)
 	}
