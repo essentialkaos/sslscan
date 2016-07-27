@@ -1,0 +1,17 @@
+language: go
+
+go:
+  - 1.6.3
+  - tip
+
+sudo: false
+
+os:
+  - linux
+
+before_install:
+  - go get pkg.re/essentialkaos/ek.v3
+  - go get pkg.re/check.v1
+
+script:
+  - go test -v
