@@ -1,4 +1,4 @@
-# SSLLabs Go Client [![GoDoc](https://godoc.org/pkg.re/essentialkaos/ssllabs.v1?status.svg)](https://godoc.org/pkg.re/essentialkaos/ssllabs.v1)
+# SSLLabs Go Client [![GoDoc](https://godoc.org/pkg.re/essentialkaos/ssllabs.v1?status.svg)](https://godoc.org/pkg.re/essentialkaos/ssllabs.v1) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/ssllabs)](https://goreportcard.com/report/github.com/essentialkaos/ssllabs)
 
 Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 
