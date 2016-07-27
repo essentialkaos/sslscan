@@ -1,4 +1,4 @@
-# SSLLabs API [![GoDoc](https://godoc.org/pkg.re/essentialkaos/ssllabs.v1?status.svg)](https://godoc.org/pkg.re/essentialkaos/ssllabs.v1)
+# SSLLabs Go Client [![GoDoc](https://godoc.org/pkg.re/essentialkaos/ssllabs.v1?status.svg)](https://godoc.org/pkg.re/essentialkaos/ssllabs.v1)
 
 Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 
@@ -6,6 +6,12 @@ Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 
 ````
 go get pkg.re/essentialkaos/ssllabs.v2
+````
+
+If you want update ek to latest stable release, do:
+
+````
+go get -u pkg.re/essentialkaos/ssllabs.v2
 ````
 
 ## Build Status
