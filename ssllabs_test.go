@@ -47,6 +47,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 		AnalyzeParams{
 			Private:   false,
 			FromCache: false,
+			StartNew:  true,
 		},
 	)
 
