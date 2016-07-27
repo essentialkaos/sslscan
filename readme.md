@@ -18,3 +18,7 @@ go get pkg.re/essentialkaos/ssllabs.v2
 ## Contributing
 
 Before contributing to this project please read our [Contributing Guidelines](https://github.com/essentialkaos/contributing-guidelines#contributing-guidelines).
+
+## License
+
+[EKOL](https://essentialkaos.com/ekol)

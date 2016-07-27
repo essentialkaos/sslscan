@@ -356,7 +356,10 @@ var UserAgent = "essentialkaos:ssllabs/v2"
 
 // NewAPI create new api struct
 func NewAPI() (*API, error) {
-	resp, err := req.Request{URL: _API_URL_INFO}.Get()
+	resp, err := req.Request{
+		URL:       _API_URL_INFO,
+		UserAgent: UserAgent,
+	}.Get()
 
 	if err != nil {
 		return nil, err
@@ -406,8 +409,9 @@ func (api *API) Analyze(host string, params ...AnalyzeParams) (*AnalyzeProgress,
 // Info return short info
 func (ap *AnalyzeProgress) Info() (*AnalyzeInfo, error) {
 	resp, err := req.Request{
-		URL:   _API_URL_ANALYZE,
-		Query: req.Query{"host": ap.host},
+		URL:       _API_URL_ANALYZE,
+		Query:     req.Query{"host": ap.host},
+		UserAgent: UserAgent,
 	}.Get()
 
 	if err != nil {
@@ -441,8 +445,9 @@ func (ap *AnalyzeProgress) DetailedInfo(ip string) (*EndpointInfo, error) {
 	}
 
 	resp, err := req.Request{
-		URL:   _API_URL_DETAILED,
-		Query: req.Query{"host": ap.host, "s": ip},
+		URL:       _API_URL_DETAILED,
+		Query:     req.Query{"host": ap.host, "s": ip},
+		UserAgent: UserAgent,
 	}.Get()
 
 	if err != nil {
