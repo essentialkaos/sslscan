@@ -97,7 +97,7 @@ type API struct {
 }
 
 type AnalyzeParams struct {
-	Private        bool
+	Public         bool
 	StartNew       bool
 	FromCache      bool
 	MaxAge         int
@@ -466,8 +466,8 @@ func (ap *AnalyzeProgress) DetailedInfo(ip string) (*EndpointInfo, error) {
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 func appendParamsToQuery(query req.Query, params AnalyzeParams) {
-	if params.Private {
-		query["publish"] = "off"
+	if params.Public {
+		query["publish"] = "on"
 	}
 
 	if params.StartNew {
