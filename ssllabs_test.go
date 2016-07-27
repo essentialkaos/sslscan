@@ -45,7 +45,8 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	progress, err := api.Analyze(
 		"https://api.ssllabs.com",
 		AnalyzeParams{
-			FromCache: true,
+			Private:   false,
+			FromCache: false,
 		},
 	)
 
