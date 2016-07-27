@@ -9,22 +9,19 @@ package ssllabs
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 import (
-	"errors"
-	"strconv"
+	"fmt"
 
-	"pkg.re/essentialkaos/ek.v1/req"
+	"pkg.re/essentialkaos/ek.v3/req"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// API_PRODUCTION Production api
-// API_DEVELOPMENT Development api
 const (
-	API_PRODUCTION  = "https://api.ssllabs.com/api/v2"
-	API_DEVELOPMENT = "https://api.dev.ssllabs.com/api/v2"
+	_API_URL_INFO     = "https://api.ssllabs.com/api/v2/info"
+	_API_URL_ANALYZE  = "https://api.ssllabs.com/api/v2/analyze"
+	_API_URL_DETAILED = "https://api.ssllabs.com/api/v2/getEndpointData"
 )
 
-// Base statuses
 const (
 	STATUS_IN_PROGRESS = "IN_PROGRESS"
 	STATUS_DNS         = "DNS"
@@ -32,11 +29,71 @@ const (
 	STATUS_ERROR       = "ERROR"
 )
 
+const (
+	SSLCSC_STATUS_FAILED              = -1
+	SSLCSC_STATUS_UNKNOWN             = 0
+	SSLCSC_STATUS_NOT_VULNERABLE      = 1
+	SSLCSC_STATUS_POSSIBLE_VULNERABLE = 2
+	SSLCSC_STATUS_VULNERABLE          = 3
+)
+
+const (
+	LUCKY_MINUS_STATUS_FAILED         = -1
+	LUCKY_MINUS_STATUS_UNKNOWN        = 0
+	LUCKY_MINUS_STATUS_NOT_VULNERABLE = 1
+	LUCKY_MINUS_STATUS_VULNERABLE     = 2
+)
+
+const (
+	POODLE_STATUS_TIMEOUT           = -3
+	POODLE_STATUS_TLS_NOT_SUPPORTED = -2
+	POODLE_STATUS_FAILED            = -1
+	POODLE_STATUS_UNKNOWN           = 0
+	POODLE_STATUS_NOT_VULNERABLE    = 1
+	POODLE_STATUS_VULNERABLE        = 2
+)
+
+const (
+	REVOCATION_STATUS_NOT_CHECKED            = 0
+	REVOCATION_STATUS_REVOKED                = 1
+	REVOCATION_STATUS_NOT_REVOKED            = 2
+	REVOCATION_STATUS_REVOCATION_CHECK_ERROR = 3
+	REVOCATION_STATUS_NO_REVOCATION_INFO     = 4
+	REVOCATION_STATUS_INTERNAL_INFO          = 5
+)
+
+const (
+	HSTS_STATUS_UNKNOWN  = "unknown"
+	HSTS_STATUS_ABSENT   = "absent"
+	HSTS_STATUS_PRESENT  = "present"
+	HSTS_STATUS_INVALID  = "invalid"
+	HSTS_STATUS_DISABLED = "disabled"
+)
+
+const (
+	HPKP_STATUS_UNKNOWN    = "unknown"
+	HPKP_STATUS_ABSENT     = "absent"
+	HPKP_STATUS_INVALID    = "invalid"
+	HPKP_STATUS_DISABLED   = "disabled"
+	HPKP_STATUS_INCOMPLETE = "incomplete"
+	HPKP_STATUS_VALID      = "valid"
+)
+
+const (
+	DROWN_STATUS_ERROR                 = "error"
+	DROWN_STATUS_UNKNOWN               = "unknown"
+	DROWN_STATUS_NOT_CHECKED           = "not_checked"
+	DROWN_STATUS_NOT_CHECKED_SAME_HOST = "not_checked_same_host"
+	DROWN_STATUS_HANDSHAKE_FAILURE     = "handshake_failure"
+	DROWN_STATUS_SSLV2                 = "sslv2"
+	DROWN_STATUS_KEY_MATCH             = "key_match"
+	DROWN_STATUS_HOSTNAME_MATCH        = "hostname_match"
+)
+
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 type API struct {
-	Info       *APIInfo
-	entryPoint string
+	Info *Info
 }
 
 type AnalyzeParams struct {
@@ -49,14 +106,13 @@ type AnalyzeParams struct {
 }
 
 type AnalyzeProgress struct {
-	entryPoint string
 	host       string
 	prevStatus string
 }
 
 // DOCS: https://github.com/ssllabs/ssllabs-scan/blob/stable/ssllabs-api-docs.md
 
-type APIInfo struct {
+type Info struct {
 	EngineVersion        string   `json:"engineVersion"`        // SSL Labs software version as a string (e.g., "1.11.14")
 	CriteriaVersion      string   `json:"criteriaVersion"`      // rating criteria version as a string (e.g., "2009f")
 	ClientMaxAssessments int      `json:"clientMaxAssessments"` // -
@@ -98,55 +154,56 @@ type EndpointInfo struct {
 }
 
 type EndpointDetails struct {
-	HostStartTime                  int64               `json:"hostStartTime"`                  // endpoint assessment starting time, in milliseconds since 1970. This field is useful when test results are retrieved in several HTTP invocations. Then, you should check that the hostStartTime value matches the startTime value of the host
-	Key                            *KeyInfo            `json:"key"`                            // key information
-	Cert                           *CertInfo           `json:"cert"`                           // certificate information
-	Chain                          *ChainInfo          `json:"chain"`                          // chain information
-	Protocols                      []*ProtocolInfo     `json:"protocols"`                      // supported protocols
-	Suites                         *SuitesInfo         `json:"suites"`                         // supported cipher suites
-	ServerSignature                string              `json:"serverSignature"`                // contents of the HTTP Server response header when known
-	PrefixDelegation               bool                `json:"prefixDelegation"`               // true if this endpoint is reachable via a hostname with the www prefix
-	NonPrefixDelegation            bool                `json:"nonPrefixDelegation"`            // true if this endpoint is reachable via a hostname without the www prefix
-	VulnBeast                      bool                `json:"vulnBeast"`                      // true if the endpoint is vulnerable to the BEAST attack
-	RenegSupport                   int                 `json:"renegSupport"`                   // this is an integer value that describes the endpoint support for renegotiation
-	STSStatus                      string              `json:"stsStatus"`                      // -
-	STSResponseHeader              string              `json:"stsResponseHeader"`              // the contents of the Strict-Transport-Security (STS) response header, if seen
-	STSMaxAge                      int64               `json:"stsMaxAge"`                      // the maxAge parameter extracted from the STS parameters
-	STSSubdomains                  bool                `json:"stsSubdomains"`                  // true if the includeSubDomains STS parameter is set
-	STSPreload                     bool                `json:"stsPreload"`                     // -
-	PKPResponseHeader              string              `json:"pkpResponseHeader"`              // the contents of the Public-Key-Pinning response header
-	SessionResumption              int                 `json:"sessionResumption"`              // this is an integer value that describes endpoint support for session resumption
-	CompressionMethods             int                 `json:"compressionMethods"`             // integer value that describes supported compression methods
-	SupportsNPN                    bool                `json:"supportsNpn"`                    // true if the server supports NPN
-	NPNProtocols                   string              `json:"npnProtocols"`                   // space separated list of supported protocols
-	SessionTickets                 int                 `json:"sessionTickets"`                 // indicates support for Session Tickets
-	OCSPStapling                   bool                `json:"ocspStapling"`                   // true if OCSP stapling is deployed on the server
-	StaplingRevocationStatus       int                 `json:"staplingRevocationStatus"`       // same as Cert.revocationStatus, but for the stapled OCSP response
-	StaplingRevocationErrorMessage string              `json:"staplingRevocationErrorMessage"` // description of the problem with the stapled OCSP response, if any
-	SNIRequired                    bool                `json:"sniRequired"`                    // if SNI support is required to access the web site
-	HTTPStatusCode                 int                 `json:"httpStatusCode"`                 // status code of the final HTTP response seen
-	HTTPForwarding                 string              `json:"httpForwarding"`                 // available on a server that responded with a redirection to some other hostname
-	SupportsRC4                    bool                `json:"supportsRc4"`                    // supportsRc4
-	RC4WithModern                  bool                `json:"rc4WithModern"`                  // true if RC4 is used with modern clients
-	RC4Only                        bool                `json:"rc4Only"`                        // -
-	ForwardSecrecy                 int                 `json:"forwardSecrecy"`                 // indicates support for Forward Secrecy
-	SIMS                           *SIMSInfo           `json:"sims"`                           // sims
-	Heartbleed                     bool                `json:"heartbleed"`                     // true if the server is vulnerable to the Heartbleed attack
-	Heartbeat                      bool                `json:"heartbeat"`                      // true if the server supports the Heartbeat extension
-	OpenSslCCS                     int                 `json:"openSslCcs"`                     // results of the CVE-2014-0224 test
-	Poodle                         bool                `json:"poodle"`                         // true if the endpoint is vulnerable to POODLE
-	PoodleTLS                      int                 `json:"poodleTls"`                      // results of the POODLE TLS test
-	FallbackSCSV                   bool                `json:"fallbackScsv"`                   // true if the server supports TLS_FALLBACK_SCSV, false if it doesn't
-	Freak                          bool                `json:"freak"`                          // true of the server is vulnerable to the FREAK attack
-	HasSCT                         int                 `json:"hasSct"`                         // information about the availability of certificate transparency information (embedded SCTs)
-	DHPrimes                       []string            `json:"dhPrimes"`                       // list of hex-encoded DH primes used by the server
-	DHUsesKnownPrimes              int                 `json:"dhUsesKnownPrimes"`              // whether the server uses known DH primes
-	DHYsReuse                      bool                `json:"dhYsReuse"`                      // true if the DH ephemeral server value is reused
-	Logjam                         bool                `json:"logjam"`                         // true if the server uses DH parameters weaker than 1024 bits
-	PreloadChecks                  []*PreloadCheckInfo `json:"preloadChecks"`                  // -
+	HostStartTime                  int64          `json:"hostStartTime"`                  // endpoint assessment starting time, in milliseconds since 1970. This field is useful when test results are retrieved in several HTTP invocations. Then, you should check that the hostStartTime value matches the startTime value of the host
+	Key                            *Key           `json:"key"`                            // key information
+	Cert                           *Cert          `json:"cert"`                           // certificate information
+	Chain                          *Chain         `json:"chain"`                          // chain information
+	Protocols                      []*Protocol    `json:"protocols"`                      // supported protocols
+	Suites                         *Suites        `json:"suites"`                         // supported cipher suites
+	ServerSignature                string         `json:"serverSignature"`                // contents of the HTTP Server response header when known
+	PrefixDelegation               bool           `json:"prefixDelegation"`               // true if this endpoint is reachable via a hostname with the www prefix
+	NonPrefixDelegation            bool           `json:"nonPrefixDelegation"`            // true if this endpoint is reachable via a hostname without the www prefix
+	VulnBeast                      bool           `json:"vulnBeast"`                      // true if the endpoint is vulnerable to the BEAST attack
+	RenegSupport                   int            `json:"renegSupport"`                   // this is an integer value that describes the endpoint support for renegotiation
+	SessionResumption              int            `json:"sessionResumption"`              // this is an integer value that describes endpoint support for session resumption
+	CompressionMethods             int            `json:"compressionMethods"`             // integer value that describes supported compression methods
+	SupportsNPN                    bool           `json:"supportsNpn"`                    // true if the server supports NPN
+	NPNProtocols                   string         `json:"npnProtocols"`                   // space separated list of supported protocols
+	SessionTickets                 int            `json:"sessionTickets"`                 // indicates support for Session Tickets
+	OCSPStapling                   bool           `json:"ocspStapling"`                   // true if OCSP stapling is deployed on the server
+	StaplingRevocationStatus       int            `json:"staplingRevocationStatus"`       // same as Cert.revocationStatus, but for the stapled OCSP response
+	StaplingRevocationErrorMessage string         `json:"staplingRevocationErrorMessage"` // description of the problem with the stapled OCSP response, if any
+	SNIRequired                    bool           `json:"sniRequired"`                    // if SNI support is required to access the web site
+	HTTPStatusCode                 int            `json:"httpStatusCode"`                 // status code of the final HTTP response seen
+	HTTPForwarding                 string         `json:"httpForwarding"`                 // available on a server that responded with a redirection to some other hostname
+	SupportsRC4                    bool           `json:"supportsRc4"`                    // supportsRc4
+	RC4WithModern                  bool           `json:"rc4WithModern"`                  // true if RC4 is used with modern clients
+	RC4Only                        bool           `json:"rc4Only"`                        // true if only RC4 suites are supported
+	ForwardSecrecy                 int            `json:"forwardSecrecy"`                 // indicates support for Forward Secrecy
+	SIMS                           *SIMS          `json:"sims"`                           // sims
+	Heartbleed                     bool           `json:"heartbleed"`                     // true if the server is vulnerable to the Heartbleed attack
+	Heartbeat                      bool           `json:"heartbeat"`                      // true if the server supports the Heartbeat extension
+	OpenSslCCS                     int            `json:"openSslCcs"`                     // results of the CVE-2014-0224 test
+	OpenSSLLuckyMinus20            int            `json:"openSSLLuckyMinus20"`            // results of the CVE-2016-2107 test
+	Poodle                         bool           `json:"poodle"`                         // true if the endpoint is vulnerable to POODLE
+	PoodleTLS                      int            `json:"poodleTls"`                      // results of the POODLE TLS test
+	FallbackSCSV                   bool           `json:"fallbackScsv"`                   // true if the server supports TLS_FALLBACK_SCSV, false if it doesn't
+	Freak                          bool           `json:"freak"`                          // true of the server is vulnerable to the FREAK attack
+	HasSCT                         int            `json:"hasSct"`                         // information about the availability of certificate transparency information (embedded SCTs)
+	DHPrimes                       []string       `json:"dhPrimes"`                       // list of hex-encoded DH primes used by the server
+	DHUsesKnownPrimes              int            `json:"dhUsesKnownPrimes"`              // whether the server uses known DH primes
+	DHYsReuse                      bool           `json:"dhYsReuse"`                      // true if the DH ephemeral server value is reused
+	Logjam                         bool           `json:"logjam"`                         // true if the server uses DH parameters weaker than 1024 bits
+	HSTSPolicy                     *HSTSPolicy    `json:"hstsPolicy"`                     // server's HSTS policy
+	HSTSPreloads                   []*HSTSPreload `json:"hstsPreloads"`                   // information about preloaded HSTS policies
+	HPKPPolicy                     *HPKPPolicy    `json:"hpkpPolicy"`                     // server's HPKP policy
+	HPKPRoPolicy                   *HPKPPolicy    `json:"hpkpRoPolicy"`                   // server's HPKP RO (Report Only) policy
+	DrownHosts                     []*DrownHost   `json:"drownHosts"`                     // list of drown hosts
+	DrownErrors                    bool           `json:"drownErrors"`                    // true if error occurred in drown test
+	DrownVulnerable                bool           `json:"drownVulnerable"`                // true if server vulnerable to drown attack
 }
 
-type KeyInfo struct {
+type Key struct {
 	Size       int    `json:"size"`       // key size, e.g., 1024 or 2048 for RSA and DSA, or 256 bits for EC
 	Alg        string `json:"alg"`        // key algorithm; possible values: RSA, DSA, and EC
 	DebianFlaw bool   `json:"debianFlaw"` // true if we suspect that the key was generated using a weak random number generator (detected via a blacklist database)
@@ -154,14 +211,13 @@ type KeyInfo struct {
 	Q          *int   `json:"q"`          // 0 if key is insecure, null otherwise
 }
 
-type ChainInfo struct {
-	Certs  []*CertInfo `json:"certs"`
-	Issues int         `json:"issues"`
+type Chain struct {
+	Certs  []*ChainCert `json:"certs"`
+	Issues int          `json:"issues"`
 }
 
-type CertInfo struct {
+type Cert struct {
 	Subject              string   `json:"subject"`              // certificate subject
-	Label                string   `json:"label"`                // -
 	CommonNames          []string `json:"commonNames"`          // common names extracted from the subject
 	AltNames             []string `json:"altNames"`             // alternative names
 	NotBefore            int64    `json:"notBefore"`            // timestamp before which the certificate is not valid
@@ -179,15 +235,32 @@ type CertInfo struct {
 	ValidationType       string   `json:"validationType"`       // E for Extended Validation certificates; may be nil if unable to determine
 	Issues               int      `json:"issues"`               // list of certificate issues, one bit per issue
 	SCT                  bool     `json:"sct"`                  // true if the certificate contains an embedded SCT
+	MustStaple           int      `json:"mustStaple"`           // a number that describes the must staple feature extension status
 	SHA1Hash             string   `json:"sha1Hash"`             // -
 	PINSHA256            string   `json:"pinSha256"`            // -
-	KeyAlg               string   `json:"keyAlg"`               // -
-	KeySize              int      `json:"keySize"`              // -
-	KeyStrength          int      `json:"keyStrength"`          // -
-	Raw                  string   `json:"raw"`                  // Raw certificate data
 }
 
-type ProtocolInfo struct {
+type ChainCert struct {
+	Subject              string `json:"subject"`              // certificate subject
+	Label                string `json:"label"`                // certificate label (user-friendly name)
+	NotBefore            int64  `json:"notBefore"`            // timestamp before which the certificate is not valid
+	NotAfter             int64  `json:"notAfter"`             // timestamp after which the certificate is not valid
+	IssuerSubject        string `json:"issuerSubject"`        // issuer subject
+	IssuerLabel          string `json:"issuerLabel"`          // issuer name
+	SigAlg               string `json:"sigAlg"`               // certificate signature algorithm
+	Issues               int    `json:"issues"`               // list of certificate issues, one bit per issue
+	KeyAlg               string `json:"keyAlg"`               // key algorithm
+	KeySize              int    `json:"keySize"`              // key size, in bits appropriate for the key algorithm
+	KeyStrength          int    `json:"keyStrength"`          // key strength, in equivalent RSA bits
+	RevocationStatus     int    `json:"revocationStatus"`     // a number that describes the revocation status of the certificate
+	CRLRevocationStatus  int    `json:"crlRevocationStatus"`  // same as revocationStatus, but only for the CRL information (if any)
+	OCSPRevocationStatus int    `json:"ocspRevocationStatus"` // same as revocationStatus, but only for the OCSP information (if any)
+	Raw                  string `json:"raw"`                  // Raw certificate data
+	SHA1Hash             string `json:"sha1Hash"`             // -
+	PINSHA256            string `json:"pinSha256"`            // -
+}
+
+type Protocol struct {
 	ID               int    `json:"id"`               // protocol version number, e.g. 0x0303 for TLS 1.2
 	Name             string `json:"name"`             // protocol name, i.e. SSL or TLS
 	Version          string `json:"version"`          // protocol version, e.g. 1.2 (for TLS)
@@ -195,12 +268,12 @@ type ProtocolInfo struct {
 	Q                *int   `json:"q"`                // 0 if the protocol is insecure, null otherwise
 }
 
-type SuitesInfo struct {
-	List       []*SuiteInfo `json:"list"`
-	Preference bool         `json:"preference"`
+type Suites struct {
+	List       []*Suite `json:"list"`
+	Preference bool     `json:"preference"`
 }
 
-type SuiteInfo struct {
+type Suite struct {
 	ID             int    `json:"id"`             // suite RFC ID (e.g., 5)
 	Name           string `json:"name"`           // suite name (e.g., TLS_RSA_WITH_RC4_128_SHA)
 	CipherStrength int    `json:"cipherStrength"` // suite strength (e.g., 128)
@@ -213,86 +286,118 @@ type SuiteInfo struct {
 	Q              *int   `json:"q"`              // 0 if the suite is insecure, null otherwise
 }
 
-type SIMSInfo struct {
-	Results []*SIMInfo `json:"results"`
+type SIMS struct {
+	Results []*SIM `json:"results"`
 }
 
-type SIMInfo struct {
-	Client     *ClientInfo `json:"client"`     // instance of SimClient
-	ErrorCode  int         `json:"errorCode"`  // zero if handshake was successful, 1 if it was not
-	Attempts   int         `json:"attempts"`   // always 1 with the current implementation
-	ProtocolID int         `json:"protocolId"` // Negotiated protocol ID
-	SuiteID    int         `json:"suiteId"`    // Negotiated suite ID
+type SIM struct {
+	Client     *SimClient `json:"client"`     // instance of SimClient
+	ErrorCode  int        `json:"errorCode"`  // zero if handshake was successful, 1 if it was not
+	Attempts   int        `json:"attempts"`   // always 1 with the current implementation
+	ProtocolID int        `json:"protocolId"` // Negotiated protocol ID
+	SuiteID    int        `json:"suiteId"`    // Negotiated suite ID
 }
 
-type ClientInfo struct {
-	ID          int    `json:"id"`
-	Name        string `json:"name"`
-	Platform    string `json:"platform"`
-	Version     string `json:"version"`
+type SimClient struct {
+	ID          int    `json:"id"`          // unique client ID
+	Name        string `json:"name"`        // some text
+	Platform    string `json:"platform"`    // some text
+	Version     string `json:"version"`     // some text
 	IsReference bool   `json:"isReference"` // true if the browser is considered representative of modern browsers, false otherwise
 }
 
-type PreloadCheckInfo struct {
-	SourceName string `json:"sourceName"`
-	Hostname   string `json:"hostname"`
-	Status     string `json:"status"`
-	SourceTime int64  `json:"sourceTime"`
+type HSTSPolicy struct {
+	LongMaxAge        int               `json:"LONG_MAX_AGE"`      // this constant contains what SSL Labs considers to be sufficiently large max-age value
+	Header            string            `json:"header"`            // the contents of the HSTS response header, if present
+	Status            string            `json:"status"`            // HSTS status
+	Error             string            `json:"error"`             // error message when error is encountered, null otherwise
+	MaxAge            int64             `json:"maxAge"`            // the max-age value specified in the policy; null if policy is missing or invalid or on parsing error
+	IncludeSubDomains bool              `json:"includeSubDomains"` // true if the includeSubDomains directive is set; null otherwise
+	Preload           bool              `json:"preload"`           // true if the preload directive is set; null otherwise
+	Directives        map[string]string `json:"directives"`        // list of raw policy directives
 }
+
+type HSTSPreload struct {
+	Source     string `json:"source"`     // source name
+	Hostname   string `json:"hostname"`   // host name
+	Status     string `json:"status"`     // preload status
+	SourceTime int64  `json:"sourceTime"` // time, as a Unix timestamp, when the preload database was retrieved
+}
+
+type HPKPPolicy struct {
+	Header            string            `json:"header"`            // the contents of the HPKP response header, if present
+	Status            string            `json:"status"`            // HPKP status
+	MaxAge            int64             `json:"maxAge"`            // the max-age value from the policy
+	IncludeSubDomains bool              `json:"includeSubDomains"` // true if the includeSubDomains directive is set; null otherwise
+	ReportURI         string            `json:"reportUri"`         // the report-uri value from the policy
+	Pins              []*Pin            `json:"pins"`              // list of all pins used by the policy
+	MatchedPins       []*Pin            `json:"matchedPins"`       // list of pins that match the current configuration
+	Directives        map[string]string `json:"directives"`        // list of raw policy directives
+}
+
+type Pin struct {
+	HashFunction string `json:"hashFunction"`
+	Value        string `json:"value"`
+}
+
+type DrownHost struct {
+	IP      string `json:"ip"`      // Ip address of server that shares same RSA-Key/hostname in its certificate
+	Export  bool   `json:"export"`  // true if export cipher suites detected
+	Port    int    `json:"port"`    // port number of the server
+	Special bool   `json:"special"` // true if vulnerable OpenSSL version detected
+	SSLv2   bool   `json:"sslv2"`   // true if SSL v2 is supported
+	Status  string `json:"status"`  // drown host status
+}
+
+// UserAgent is user-agent used for all requests
+var UserAgent = "essentialkaos:ssllabs/v2"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // NewAPI create new api struct
-func NewAPI(entryPoint string) (*API, error) {
-	if entryPoint == "" {
-		entryPoint = API_PRODUCTION
-	}
-
-	api := &API{entryPoint: entryPoint}
-	resp, err := req.Request{URL: api.entryPoint + "/info"}.Do()
-
-	if err != nil {
-		return nil, err
-	}
-
-	info := &APIInfo{}
-	err = resp.JSON(info)
-
-	if err != nil {
-		return nil, err
-	}
-
-	api.Info = info
-
-	return api, nil
-}
-
-// ////////////////////////////////////////////////////////////////////////////////// //
-
-// Analyze start check for host
-func (api *API) Analyze(host string, params ...*AnalyzeParams) (*AnalyzeProgress, error) {
-	progress := &AnalyzeProgress{
-		entryPoint: api.entryPoint,
-		host:       host,
-	}
-
-	var query = map[string]string{"host": host}
-
-	if len(params) != 0 {
-		appendParamsToQuery(query, params[0])
-	}
-
-	resp, err := req.Request{
-		URL:   api.entryPoint + "/analyze",
-		Query: query,
-	}.Do()
+func NewAPI() (*API, error) {
+	resp, err := req.Request{URL: _API_URL_INFO}.Get()
 
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.StatusCode != 200 {
-		return nil, errors.New("API return HTTP code " + strconv.Itoa(resp.StatusCode))
+		return nil, fmt.Errorf("API return HTTP code %d", resp.StatusCode)
+	}
+
+	info := &Info{}
+	err = resp.JSON(info)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &API{Info: info}, nil
+}
+
+// ////////////////////////////////////////////////////////////////////////////////// //
+
+// Analyze start check for host
+func (api *API) Analyze(host string, params ...AnalyzeParams) (*AnalyzeProgress, error) {
+	progress := &AnalyzeProgress{host: host}
+	query := req.Query{"host": host}
+
+	if len(params) != 0 {
+		appendParamsToQuery(query, params[0])
+	}
+
+	resp, err := req.Request{
+		URL:   _API_URL_ANALYZE,
+		Query: query,
+	}.Get()
+
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("API return HTTP code %d", resp.StatusCode)
 	}
 
 	return progress, nil
@@ -301,12 +406,16 @@ func (api *API) Analyze(host string, params ...*AnalyzeParams) (*AnalyzeProgress
 // Info return short info
 func (ap *AnalyzeProgress) Info() (*AnalyzeInfo, error) {
 	resp, err := req.Request{
-		URL:   ap.entryPoint + "/analyze",
-		Query: map[string]string{"host": ap.host},
-	}.Do()
+		URL:   _API_URL_ANALYZE,
+		Query: req.Query{"host": ap.host},
+	}.Get()
 
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("API return HTTP code %d", resp.StatusCode)
 	}
 
 	info := &AnalyzeInfo{}
@@ -327,17 +436,22 @@ func (ap *AnalyzeProgress) DetailedInfo(ip string) (*EndpointInfo, error) {
 		ap.Info()
 
 		if ap.prevStatus != STATUS_READY {
-			return nil, errors.New("Retrieving detailed information possible only with status READY")
+			return nil, fmt.Errorf("Retrieving detailed information possible only with status READY")
 		}
 	}
 
 	resp, err := req.Request{
-		URL: ap.entryPoint + "/getEndpointData",
-		Query: map[string]string{
-			"host": ap.host,
-			"s":    ip,
-		},
-	}.Do()
+		URL:   _API_URL_DETAILED,
+		Query: req.Query{"host": ap.host, "s": ip},
+	}.Get()
+
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("API return HTTP code %d", resp.StatusCode)
+	}
 
 	info := &EndpointInfo{}
 	err = resp.JSON(info)
@@ -351,7 +465,7 @@ func (ap *AnalyzeProgress) DetailedInfo(ip string) (*EndpointInfo, error) {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-func appendParamsToQuery(query map[string]string, params *AnalyzeParams) {
+func appendParamsToQuery(query req.Query, params AnalyzeParams) {
 	if params.Private {
 		query["publish"] = "off"
 	}
@@ -365,7 +479,7 @@ func appendParamsToQuery(query map[string]string, params *AnalyzeParams) {
 	}
 
 	if params.MaxAge != 0 {
-		query["maxAge"] = strconv.Itoa(params.MaxAge)
+		query["maxAge"] = fmt.Sprintf("%d", params.MaxAge)
 	}
 
 	if params.All {

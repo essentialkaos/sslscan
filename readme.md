@@ -5,7 +5,7 @@ Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 #### Installation
 
 ````
-go get pkg.re/essentialkaos/ssllabs.v1
+go get pkg.re/essentialkaos/ssllabs.v2
 ````
 
 #### License
