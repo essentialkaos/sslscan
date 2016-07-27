@@ -8,6 +8,7 @@ package ssllabs
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -61,6 +62,8 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 		c.Assert(info, check.NotNil)
 		c.Assert(err, check.IsNil)
+
+		fmt.Printf("→ %s : %s\n", info.Status, info.StatusMessage)
 
 		if info.Status == STATUS_ERROR {
 			c.Fatal(info.StatusMessage)
