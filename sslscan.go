@@ -1,5 +1,5 @@
-// Package ssllabs provides methods and structs for working with SSLLabs public API
-package ssllabs
+// Package sslscan provides methods and structs for working with SSLLabs public API
+package sslscan
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
