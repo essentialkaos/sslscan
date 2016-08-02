@@ -1,4 +1,4 @@
-# SSLScan [![GoDoc](https://godoc.org/pkg.re/essentialkaos/sslscan.v2?status.svg)](https://godoc.org/pkg.re/essentialkaos/sslscan.v2) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/sslscan)](https://goreportcard.com/report/github.com/essentialkaos/sslscan) [![codebeat badge](https://codebeat.co/badges/021ba246-1f8a-40e0-a20f-d45399454d21)](https://codebeat.co/projects/github-com-essentialkaos-sslscan)
+# SSLScan [![GoDoc](https://godoc.org/pkg.re/essentialkaos/sslscan.v2?status.svg)](https://godoc.org/pkg.re/essentialkaos/sslscan.v2) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/sslscan)](https://goreportcard.com/report/github.com/essentialkaos/sslscan) [![Codebeat](https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0)](https://codebeat.co/projects/github-com-essentialkaos-sslscan)
 
 Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 
