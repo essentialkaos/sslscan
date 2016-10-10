@@ -33,7 +33,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "1.23.50")
+	c.Assert(api.Info.EngineVersion, check.Equals, "1.24.0")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009l")
 }
 
@@ -307,10 +307,17 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	c.Assert(details.HSTSPreloads, check.Not(check.HasLen), 0)
 
-	for _, preload := range details.HSTSPreloads {
-		c.Assert(preload.Hostname, check.Equals, "api.ssllabs.com")
-		c.Assert(preload.Status, check.Equals, HSTS_STATUS_ABSENT)
-	}
+	c.Assert(details.HSTSPreloads[0].Hostname, check.Equals, "api.ssllabs.com")
+	c.Assert(details.HSTSPreloads[1].Hostname, check.Equals, "api.ssllabs.com")
+	c.Assert(details.HSTSPreloads[2].Hostname, check.Equals, "api.ssllabs.com")
+	c.Assert(details.HSTSPreloads[3].Hostname, check.Equals, "api.ssllabs.com")
+	c.Assert(details.HSTSPreloads[4].Hostname, check.Equals, "api.ssllabs.com")
+
+	c.Assert(details.HSTSPreloads[0].Status, check.Equals, HSTS_STATUS_ABSENT)
+	c.Assert(details.HSTSPreloads[1].Status, check.Equals, HSTS_STATUS_ABSENT)
+	c.Assert(details.HSTSPreloads[2].Status, check.Equals, HSTS_STATUS_ABSENT)
+	c.Assert(details.HSTSPreloads[3].Status, check.Equals, HSTS_STATUS_ABSENT)
+	c.Assert(details.HSTSPreloads[4].Status, check.Equals, HSTS_STATUS_ERROR)
 
 	c.Assert(details.HSTSPreloads[0].Source, check.Equals, "Chrome")
 	c.Assert(details.HSTSPreloads[1].Source, check.Equals, "Edge")

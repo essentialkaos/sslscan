@@ -11,7 +11,7 @@ package sslscan
 import (
 	"fmt"
 
-	"pkg.re/essentialkaos/ek.v3/req"
+	"pkg.re/essentialkaos/ek.v5/req"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -68,6 +68,7 @@ const (
 	HSTS_STATUS_PRESENT  = "present"
 	HSTS_STATUS_INVALID  = "invalid"
 	HSTS_STATUS_DISABLED = "disabled"
+	HSTS_STATUS_ERROR    = "error"
 )
 
 const (
@@ -77,6 +78,7 @@ const (
 	HPKP_STATUS_DISABLED   = "disabled"
 	HPKP_STATUS_INCOMPLETE = "incomplete"
 	HPKP_STATUS_VALID      = "valid"
+	HPKP_STATUS_ERROR      = "error"
 )
 
 const (
@@ -90,10 +92,15 @@ const (
 	DROWN_STATUS_HOSTNAME_MATCH        = "hostname_match"
 )
 
+// Package version
+const VERSION = 3
+
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 type API struct {
 	Info *Info
+
+	engine *req.Engine // Pointer to req.Engine used for all request
 }
 
 type AnalyzeParams struct {
@@ -108,6 +115,8 @@ type AnalyzeParams struct {
 type AnalyzeProgress struct {
 	host       string
 	prevStatus string
+
+	engine *req.Engine // Pointer to req.Engine used for all request
 }
 
 // DOCS: https://github.com/ssllabs/ssllabs-scan/blob/stable/ssllabs-api-docs.md
@@ -349,17 +358,17 @@ type DrownHost struct {
 	Status  string `json:"status"`  // drown host status
 }
 
-// UserAgent is user-agent used for all requests
-var UserAgent = "essentialkaos:ssllabs/v2"
-
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // NewAPI create new api struct
 func NewAPI() (*API, error) {
-	resp, err := req.Request{
-		URL:       _API_URL_INFO,
-		UserAgent: UserAgent,
-	}.Get()
+	engine := &req.Engine{}
+
+	engine.SetUserAgent("go-sslscan", fmt.Sprintf("%d", VERSION))
+
+	resp, err := engine.Get(req.Request{
+		URL: _API_URL_INFO,
+	})
 
 	if err != nil {
 		return nil, err
@@ -376,24 +385,24 @@ func NewAPI() (*API, error) {
 		return nil, err
 	}
 
-	return &API{Info: info}, nil
+	return &API{Info: info, engine: engine}, nil
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // Analyze start check for host
 func (api *API) Analyze(host string, params ...AnalyzeParams) (*AnalyzeProgress, error) {
-	progress := &AnalyzeProgress{host: host}
+	progress := &AnalyzeProgress{host: host, engine: api.engine}
 	query := req.Query{"host": host}
 
 	if len(params) != 0 {
 		appendParamsToQuery(query, params[0])
 	}
 
-	resp, err := req.Request{
+	resp, err := api.engine.Get(req.Request{
 		URL:   _API_URL_ANALYZE,
 		Query: query,
-	}.Get()
+	})
 
 	if err != nil {
 		return nil, err
@@ -408,11 +417,10 @@ func (api *API) Analyze(host string, params ...AnalyzeParams) (*AnalyzeProgress,
 
 // Info return short info
 func (ap *AnalyzeProgress) Info() (*AnalyzeInfo, error) {
-	resp, err := req.Request{
-		URL:       _API_URL_ANALYZE,
-		Query:     req.Query{"host": ap.host},
-		UserAgent: UserAgent,
-	}.Get()
+	resp, err := ap.engine.Get(req.Request{
+		URL:   _API_URL_ANALYZE,
+		Query: req.Query{"host": ap.host},
+	})
 
 	if err != nil {
 		return nil, err
@@ -444,11 +452,10 @@ func (ap *AnalyzeProgress) DetailedInfo(ip string) (*EndpointInfo, error) {
 		}
 	}
 
-	resp, err := req.Request{
-		URL:       _API_URL_DETAILED,
-		Query:     req.Query{"host": ap.host, "s": ip},
-		UserAgent: UserAgent,
-	}.Get()
+	resp, err := ap.engine.Get(req.Request{
+		URL:   _API_URL_DETAILED,
+		Query: req.Query{"host": ap.host, "s": ip},
+	})
 
 	if err != nil {
 		return nil, err
