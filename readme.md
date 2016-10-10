@@ -5,13 +5,13 @@ Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 ## Installation
 
 ````
-go get pkg.re/essentialkaos/sslscan.v1
+go get pkg.re/essentialkaos/sslscan.v2
 ````
 
 If you want update sslscan package to latest stable release, do:
 
 ````
-go get -u pkg.re/essentialkaos/sslscan.v1
+go get -u pkg.re/essentialkaos/sslscan.v2
 ````
 
 ## Build Status
