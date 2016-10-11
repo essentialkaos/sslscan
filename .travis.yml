@@ -3,7 +3,6 @@ sudo: false
 language: go
 
 go:
-  - 1.6.3
   - 1.7.1
   - tip
 
@@ -14,7 +13,6 @@ branches:
 
 os:
   - linux
-  - osx
 
 matrix:
   fast_finish: true
