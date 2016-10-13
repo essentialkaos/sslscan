@@ -93,7 +93,7 @@ const (
 )
 
 // Package version
-const VERSION = 2
+const VERSION = 3
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -363,10 +363,17 @@ type DrownHost struct {
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // NewAPI create new api struct
-func NewAPI() (*API, error) {
+func NewAPI(app string) (*API, error) {
+	if app == "" {
+		return nil, fmt.Errorf("App name can't be empty")
+	}
+
 	engine := &req.Engine{}
 
-	engine.SetUserAgent("go-sslscan", fmt.Sprintf("%d", VERSION))
+	engine.SetUserAgent(
+		fmt.Sprintf("go-sslscan/%s", app),
+		fmt.Sprintf("%d", VERSION),
+	)
 
 	resp, err := engine.Get(req.Request{
 		URL: _API_URL_INFO,
