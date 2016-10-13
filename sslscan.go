@@ -363,21 +363,16 @@ type DrownHost struct {
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // NewAPI create new api struct
-func NewAPI(app string) (*API, error) {
+func NewAPI(app, version string) (*API, error) {
 	if app == "" {
 		return nil, fmt.Errorf("App name can't be empty")
 	}
 
 	engine := &req.Engine{}
 
-	engine.SetUserAgent(
-		fmt.Sprintf("go-sslscan/%s", app),
-		fmt.Sprintf("%d", VERSION),
-	)
+	engine.SetUserAgent(app, version, fmt.Sprintf("SSLScan/%d", VERSION))
 
-	resp, err := engine.Get(req.Request{
-		URL: _API_URL_INFO,
-	})
+	resp, err := engine.Get(req.Request{URL: _API_URL_INFO})
 
 	if err != nil {
 		return nil, err

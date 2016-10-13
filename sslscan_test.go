@@ -17,10 +17,6 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TEST_UA = "__test__"
-
-// ////////////////////////////////////////////////////////////////////////////////// //
-
 func Test(t *testing.T) { check.TestingT(t) }
 
 type SSLLabsSuite struct{}
@@ -32,7 +28,7 @@ var _ = check.Suite(&SSLLabsSuite{})
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
-	api, err := NewAPI(_TEST_UA)
+	api, err := NewAPI("SSLScanTester", "3.0.0")
 
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
@@ -42,14 +38,12 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 }
 
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
-	api, err := NewAPI(_TEST_UA)
+	api, err := NewAPI("SSLScanTester", "3.0.0")
 
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
 
-	progress, err := api.Analyze(
-		"https://api.ssllabs.com",
-	)
+	progress, err := api.Analyze("https://api.ssllabs.com")
 
 	c.Assert(progress, check.NotNil)
 	c.Assert(err, check.IsNil)
