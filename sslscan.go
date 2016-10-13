@@ -189,6 +189,8 @@ type EndpointDetails struct {
 	RC4WithModern                  bool           `json:"rc4WithModern"`                  // true if RC4 is used with modern clients
 	RC4Only                        bool           `json:"rc4Only"`                        // true if only RC4 suites are supported
 	ForwardSecrecy                 int            `json:"forwardSecrecy"`                 // indicates support for Forward Secrecy
+	ProtocolIntolerance            int            `json:"protocolIntolerance"`            // indicates protocol version intolerance issues
+	MiscIntolerance                int            `json:"miscIntolerance"`                // indicates protocol version intolerance issues
 	SIMS                           *SIMS          `json:"sims"`                           // sims
 	Heartbleed                     bool           `json:"heartbleed"`                     // true if the server is vulnerable to the Heartbleed attack
 	Heartbeat                      bool           `json:"heartbeat"`                      // true if the server supports the Heartbeat extension

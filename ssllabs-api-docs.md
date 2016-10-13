@@ -1,7 +1,6 @@
-# SSL Labs API Documentation v1.23.44 #
+# SSL Labs API Documentation v1.24.0 #
 
-**Last update:** 14 June 2016<br>
-**Author:** Ivan Ristic <iristic@qualys.com>
+**Last update:** 1 September 2016
 
 This document explains the SSL Labs Assessment APIs, which can be used to test SSL servers available on the public Internet.
 
@@ -235,6 +234,17 @@ The remainder of the document explains the structure of the returned objects. Th
    * bit 0 (1) - set if at least one browser from our simulations negotiated a Forward Secrecy suite.
    * bit 1 (2) - set based on Simulator results if FS is achieved with modern clients. For example, the server supports ECDHE suites, but not DHE.
    * bit 2 (4) - set if all simulated clients achieve FS. In other words, this requires an ECDHE + DHE combination to be supported.
+* **protocolIntolerance** - indicates protocol version intolerance issues:
+   * bit 0 (1) - TLS 1.0
+   * bit 1 (2) - TLS 1.1
+   * bit 2 (4) - TLS 1.2
+   * bit 3 (8) - TLS 1.3
+   * bit 4 (16) - TLS 1.152
+   * bit 5 (32) - TLS 2.152
+* **miscIntolerance** - indicates various other types of intolerance:
+   * bit 0 (1) - extension intolerance
+   * bit 1 (2) - long handshake intolerance
+   * bit 2 (4) - long handshake intolerance workaround success
 * **sims** - instance of [SimDetails](#simdetails).
 * **heartbleed** - true if the server is vulnerable to the Heartbleed attack.
 * **heartbeat** - true if the server supports the Heartbeat extension.
@@ -271,10 +281,10 @@ The remainder of the document explains the structure of the returned objects. Th
 * **dhYsReuse** - true if the DH ephemeral server value is reused. Not present if the server doesn't support the DH key exchange.
 * **logjam** - true if the server uses DH parameters weaker than 1024 bits.
 * **chaCha20Preference** - true if the server takes into account client preferences when deciding if to use ChaCha20 suites.
-* **hstsPolicy** - server's HSTS policy. Experimental.
-* **hstsPreloads[]** - information about preloaded HSTS policies.
-* **hpkpPolicy** - server's HPKP policy. Experimental.
-* **hpkpRoPolicy** - server's HPKP RO (Report Only) policy. Experimental. 
+* **hstsPolicy{}** - server's [HSTS policy](#hstspolicy). Experimental.
+* **hstsPreloads[]** - information about [preloaded HSTS policies](#hstspreload).
+* **hpkpPolicy{}** - server's [HPKP policy](#hpkppolicy). Experimental.
+* **hpkpRoPolicy{}** - server's [HPKP RO (Report Only) policy](#hpkppolicy). Experimental.
 * **drownHosts[]** - list of [drown hosts](#drownhosts). Experimental.
 * **drownErrors** - true if error occurred in drown test.
 * **drownVulnerable** - true if server vulnerable to drown attack.
@@ -453,7 +463,7 @@ The HstsPreload object contains preload HSTS status of one source for the curren
    * unknown - either before the preload status is checked, or if the information is not available for some reason.
    * absent
    * present
-* **error** - error message, when status is "error" 
+* **error** - error message, when status is "error"
 * **sourceTime** - time, as a Unix timestamp, when the preload database was retrieved
 
 ### HpkpPolicy ###
@@ -471,8 +481,8 @@ The HstsPreload object contains preload HSTS status of one source for the curren
 * **includeSubDomains** - true if the includeSubDomains directive is set; null otherwise
 * **reportUri** - the report-uri value from the policy
 * **pins[]** - list of all pins used by the policy
-* **matchedPins[]** -  list of pins that match the current configuration
-* **directives[][]** - list of raw policy directives
+* **matchedPins[]** -  list of pins that match the current configuration; each list entry contains an object with two fields, `hashFunction` and `value` (hex-encoded)
+* **directives[][]** - list of raw policy directives (name-value pairs)
 
 ### DrownHosts ###
 
@@ -490,7 +500,7 @@ The HstsPreload object contains preload HSTS status of one source for the curren
    * sslv2 - SSL v2 supported but not same rsa key
    * key_match - vulnerable (same key with SSL v2)
    * hostname_match - vulnerable (same hostname with SSL v2)
-   
+
 ### StatusCodes ###
 
 * **statusDetails** - a map containing all status details codes and the corresponding English translations. Please note that, once in use, the codes will not change, whereas the translations may change at any time.
@@ -530,10 +540,13 @@ The HstsPreload object contains preload HSTS status of one source for the curren
 * New EndpointDetails fields: rc4Only, chaCha20Preference.
 * The maximum value supported by the stsMaxAge field has been increased to 9223372036854775807.
 * [Experimental] New API call: getRootCertsRaw.
-* [Experimental] HSTS information is now contained within its own structure EndpointDetails.hstsPolicy. The previously-used fields are deprecated but continue to be supported for backward compatibility. 
+* [Experimental] HSTS information is now contained within its own structure EndpointDetails.hstsPolicy. The previously-used fields are deprecated but continue to be supported for backward compatibility.
 * [Experimental] New fields: HPKP and HPKP-RO information is now exposed in EndpointDetails.hpkpPolicy and EndpointDetails.hpkpRoPolicy. The field pkpResponseHeader is now deprecated, but continues to be supported for backward compatibility.
 
 ### 1.23.x (14 June 2016) ###
- * Added EndpointDetails for DROWN. Fields: drownHosts list which uses DrownHosts structure, drownErrors and drownVulnerable.
- * Added EndpointDetails for CVE-2016-2107. Fields: openSSLLuckyMinus20.
- * New Cert field: mustStaple.
+ * Added EndpointDetails fields: drownHosts list which uses DrownHosts structure, drownErrors and drownVulnerable.
+ * Added EndpointDetails fields: openSSLLuckyMinus20.
+ * Added Cert field: mustStaple.
+
+### 1.24.x (1 September 2016) ###
+ * Added EndpointDetails fields: protocolIntolerance and miscIntolerance.
