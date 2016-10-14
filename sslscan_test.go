@@ -28,7 +28,7 @@ var _ = check.Suite(&SSLLabsSuite{})
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
-	api, err := NewAPI()
+	api, err := NewAPI("SSLScanTester", "3.0.0")
 
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
@@ -38,21 +38,19 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 }
 
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
-	api, err := NewAPI()
+	api, err := NewAPI("SSLScanTester", "3.0.0")
 
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
 
-	progress, err := api.Analyze(
-		"https://api.ssllabs.com",
-	)
+	progress, err := api.Analyze("https://api.ssllabs.com")
 
 	c.Assert(progress, check.NotNil)
 	c.Assert(err, check.IsNil)
 
 	var info *AnalyzeInfo
 
-	start := time.Now()
+	fmt.Printf("Progress: ")
 
 	for {
 		info, err = progress.Info()
@@ -68,10 +66,12 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 			break
 		}
 
-		fmt.Printf("→ %s (%s)\n", info.Status, time.Since(start))
+		fmt.Printf(".")
 
 		time.Sleep(5 * time.Second)
 	}
+
+	fmt.Println(" DONE")
 
 	c.Assert(info.Host, check.Equals, "https://api.ssllabs.com")
 	c.Assert(info.Port, check.Equals, 443)
@@ -250,6 +250,8 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.RC4WithModern, check.Equals, false)
 	c.Assert(details.RC4Only, check.Equals, false)
 	c.Assert(details.ForwardSecrecy, check.Equals, 4)
+	c.Assert(details.ProtocolIntolerance, check.Equals, 0)
+	c.Assert(details.MiscIntolerance, check.Equals, 0)
 	c.Assert(details.Heartbleed, check.Equals, false)
 	c.Assert(details.Heartbeat, check.Equals, false)
 	c.Assert(details.OpenSslCCS, check.Equals, 1)

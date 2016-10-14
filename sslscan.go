@@ -93,7 +93,7 @@ const (
 )
 
 // Package version
-const VERSION = 2
+const VERSION = 3
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -189,6 +189,8 @@ type EndpointDetails struct {
 	RC4WithModern                  bool           `json:"rc4WithModern"`                  // true if RC4 is used with modern clients
 	RC4Only                        bool           `json:"rc4Only"`                        // true if only RC4 suites are supported
 	ForwardSecrecy                 int            `json:"forwardSecrecy"`                 // indicates support for Forward Secrecy
+	ProtocolIntolerance            int            `json:"protocolIntolerance"`            // indicates protocol version intolerance issues
+	MiscIntolerance                int            `json:"miscIntolerance"`                // indicates protocol version intolerance issues
 	SIMS                           *SIMS          `json:"sims"`                           // sims
 	Heartbleed                     bool           `json:"heartbleed"`                     // true if the server is vulnerable to the Heartbleed attack
 	Heartbeat                      bool           `json:"heartbeat"`                      // true if the server supports the Heartbeat extension
@@ -361,14 +363,16 @@ type DrownHost struct {
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // NewAPI create new api struct
-func NewAPI() (*API, error) {
+func NewAPI(app, version string) (*API, error) {
+	if app == "" {
+		return nil, fmt.Errorf("App name can't be empty")
+	}
+
 	engine := &req.Engine{}
 
-	engine.SetUserAgent("go-sslscan", fmt.Sprintf("%d", VERSION))
+	engine.SetUserAgent(app, version, fmt.Sprintf("SSLScan/%d", VERSION))
 
-	resp, err := engine.Get(req.Request{
-		URL: _API_URL_INFO,
-	})
+	resp, err := engine.Get(req.Request{URL: _API_URL_INFO})
 
 	if err != nil {
 		return nil, err
