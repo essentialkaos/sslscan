@@ -28,17 +28,17 @@ var _ = check.Suite(&SSLLabsSuite{})
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
-	api, err := NewAPI("SSLScanTester", "3.0.0")
+	api, err := NewAPI("SSLScanTester", "4.0.0")
 
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "1.24.0")
+	c.Assert(api.Info.EngineVersion, check.Equals, "1.24.4")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009l")
 }
 
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
-	api, err := NewAPI("SSLScanTester", "3.0.0")
+	api, err := NewAPI("SSLScanTester", "4.0.0")
 
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
@@ -208,7 +208,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 		switch suite.ID {
 		case 22:
 			c.Assert(suite.Name, check.Equals, "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA")
-			c.Assert(suite.CipherStrength, check.Equals, 168)
+			c.Assert(suite.CipherStrength, check.Equals, 112)
 			c.Assert(suite.DHStrength, check.Equals, 2048)
 			c.Assert(suite.DHP, check.Equals, 256)
 			c.Assert(suite.DHG, check.Equals, 1)
@@ -264,7 +264,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.DHUsesKnownPrimes, check.Equals, 0)
 	c.Assert(details.DHYsReuse, check.Equals, false)
 	c.Assert(details.Logjam, check.Equals, false)
-	c.Assert(details.DrownErrors, check.Equals, false)
+	c.Assert(details.DrownErrors, check.Equals, true)
 	c.Assert(details.DrownVulnerable, check.Equals, false)
 
 	c.Assert(details.SIMS, check.NotNil)
@@ -307,25 +307,22 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.HSTSPolicy.IncludeSubDomains, check.Equals, false)
 	c.Assert(details.HSTSPolicy.Preload, check.Equals, false)
 
-	c.Assert(details.HSTSPreloads, check.Not(check.HasLen), 0)
+	c.Assert(details.HSTSPreloads, check.HasLen, 4)
 
 	c.Assert(details.HSTSPreloads[0].Hostname, check.Equals, "api.ssllabs.com")
 	c.Assert(details.HSTSPreloads[1].Hostname, check.Equals, "api.ssllabs.com")
 	c.Assert(details.HSTSPreloads[2].Hostname, check.Equals, "api.ssllabs.com")
 	c.Assert(details.HSTSPreloads[3].Hostname, check.Equals, "api.ssllabs.com")
-	c.Assert(details.HSTSPreloads[4].Hostname, check.Equals, "api.ssllabs.com")
 
 	c.Assert(details.HSTSPreloads[0].Status, check.Equals, HSTS_STATUS_ABSENT)
 	c.Assert(details.HSTSPreloads[1].Status, check.Equals, HSTS_STATUS_ABSENT)
 	c.Assert(details.HSTSPreloads[2].Status, check.Equals, HSTS_STATUS_ABSENT)
 	c.Assert(details.HSTSPreloads[3].Status, check.Equals, HSTS_STATUS_ABSENT)
-	c.Assert(details.HSTSPreloads[4].Status, check.Equals, HSTS_STATUS_ERROR)
 
 	c.Assert(details.HSTSPreloads[0].Source, check.Equals, "Chrome")
 	c.Assert(details.HSTSPreloads[1].Source, check.Equals, "Edge")
 	c.Assert(details.HSTSPreloads[2].Source, check.Equals, "Firefox")
 	c.Assert(details.HSTSPreloads[3].Source, check.Equals, "IE")
-	c.Assert(details.HSTSPreloads[4].Source, check.Equals, "Tor")
 
 	c.Assert(details.HPKPPolicy, check.NotNil)
 	c.Assert(details.HPKPPolicy.Header, check.Equals, "")
