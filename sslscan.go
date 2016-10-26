@@ -93,7 +93,7 @@ const (
 )
 
 // Package version
-const VERSION = 3
+const VERSION = 4
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -307,6 +307,7 @@ type SIM struct {
 	Attempts   int        `json:"attempts"`   // always 1 with the current implementation
 	ProtocolID int        `json:"protocolId"` // Negotiated protocol ID
 	SuiteID    int        `json:"suiteId"`    // Negotiated suite ID
+	KXInfo     string     `json:"kxInfo"`     // key exchange info
 }
 
 type SimClient struct {
@@ -336,19 +337,24 @@ type HSTSPreload struct {
 }
 
 type HPKPPolicy struct {
-	Header            string            `json:"header"`            // the contents of the HPKP response header, if present
-	Status            string            `json:"status"`            // HPKP status
-	MaxAge            int64             `json:"maxAge"`            // the max-age value from the policy
-	IncludeSubDomains bool              `json:"includeSubDomains"` // true if the includeSubDomains directive is set; null otherwise
-	ReportURI         string            `json:"reportUri"`         // the report-uri value from the policy
-	Pins              []*Pin            `json:"pins"`              // list of all pins used by the policy
-	MatchedPins       []*Pin            `json:"matchedPins"`       // list of pins that match the current configuration
-	Directives        map[string]string `json:"directives"`        // list of raw policy directives
+	Header            string       `json:"header"`            // the contents of the HPKP response header, if present
+	Status            string       `json:"status"`            // HPKP status
+	MaxAge            int64        `json:"maxAge"`            // the max-age value from the policy
+	IncludeSubDomains bool         `json:"includeSubDomains"` // true if the includeSubDomains directive is set; null otherwise
+	ReportURI         string       `json:"reportUri"`         // the report-uri value from the policy
+	Pins              []*Pin       `json:"pins"`              // list of all pins used by the policy
+	MatchedPins       []*Pin       `json:"matchedPins"`       // list of pins that match the current configuration
+	Directives        []*Directive `json:"directives"`        // list of raw policy directives
 }
 
 type Pin struct {
 	HashFunction string `json:"hashFunction"`
 	Value        string `json:"value"`
+}
+
+type Directive struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
 }
 
 type DrownHost struct {
