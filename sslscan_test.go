@@ -212,7 +212,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 			c.Assert(suite.DHStrength, check.Equals, 2048)
 			c.Assert(suite.DHP, check.Equals, 256)
 			c.Assert(suite.DHG, check.Equals, 1)
-			c.Assert(suite.DHYs, check.Equals, 255)
+			c.Assert(suite.DHYs, check.Equals, 256)
 			c.Assert(suite.ECDHBits, check.Equals, 0)
 			c.Assert(suite.ECDHStrength, check.Equals, 0)
 			c.Assert(suite.Q, check.IsNil)
