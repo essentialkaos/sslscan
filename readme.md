@@ -1,17 +1,17 @@
-# SSLScan [![GoDoc](https://godoc.org/pkg.re/essentialkaos/sslscan.v3?status.svg)](https://godoc.org/pkg.re/essentialkaos/sslscan.v3) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/sslscan)](https://goreportcard.com/report/github.com/essentialkaos/sslscan) [![Codebeat](https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0)](https://codebeat.co/projects/github-com-essentialkaos-sslscan)
+# SSLScan [![GoDoc](https://godoc.org/pkg.re/essentialkaos/sslscan.v4?status.svg)](https://godoc.org/pkg.re/essentialkaos/sslscan.v4) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/sslscan)](https://goreportcard.com/report/github.com/essentialkaos/sslscan) [![Codebeat](https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0)](https://codebeat.co/projects/github-com-essentialkaos-sslscan)
 
 Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 
 ## Installation
 
 ````
-go get pkg.re/essentialkaos/sslscan.v3
+go get pkg.re/essentialkaos/sslscan.v4
 ````
 
 If you want update sslscan package to latest stable release, do:
 
 ````
-go get -u pkg.re/essentialkaos/sslscan.v3
+go get -u pkg.re/essentialkaos/sslscan.v4
 ````
 
 ## Build Status
