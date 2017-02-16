@@ -33,8 +33,8 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "1.24.4")
-	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009l")
+	c.Assert(api.Info.EngineVersion, check.Equals, "1.27.0")
+	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009m")
 }
 
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
