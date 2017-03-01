@@ -3,7 +3,7 @@ package sslscan
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2016 Essential Kaos                         //
+//                     Copyright (c) 2009-2017 ESSENTIAL KAOS                         //
 //      Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>      //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -11,7 +11,7 @@ package sslscan
 import (
 	"fmt"
 
-	"pkg.re/essentialkaos/ek.v5/req"
+	"pkg.re/essentialkaos/ek.v6/req"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //

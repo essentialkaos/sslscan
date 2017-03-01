@@ -4,6 +4,7 @@ language: go
 
 go:
   - 1.7.x
+  - 1.8.x
   - tip
 
 branches:
@@ -20,7 +21,7 @@ matrix:
     - go: tip
 
 before_install:
-  - go get pkg.re/essentialkaos/ek.v5
+  - go get pkg.re/essentialkaos/ek.v6
   - go get pkg.re/check.v1
 
 script:
