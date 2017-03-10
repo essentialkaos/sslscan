@@ -11,7 +11,7 @@ deps-test:
 	go get -v pkg.re/check.v1
 
 test:
-	go test -covermode=count .
+	go test -v -covermode=count .
 
 fmt:
 	find . -name "*.go" -exec gofmt -s -w {} \;
