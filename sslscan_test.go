@@ -28,7 +28,7 @@ var _ = check.Suite(&SSLLabsSuite{})
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
-	api, err := NewAPI("SSLScanTester", "4.0.0")
+	api, err := NewAPI("SSLScanTester", "5.0.0")
 
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
@@ -38,7 +38,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 }
 
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
-	api, err := NewAPI("SSLScanTester", "4.0.0")
+	api, err := NewAPI("SSLScanTester", "5.0.0")
 
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
