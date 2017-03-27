@@ -4,15 +4,23 @@ Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 
 ## Installation
 
-````
+Before the initial install allows git to use redirects for [pkg.re](https://github.com/essentialkaos/pkgre) service (reason why you should do this described [here](https://github.com/essentialkaos/pkgre#git-support)):
+
+```
+git config --global http.https://pkg.re.followRedirects true
+```
+
+To build the SSLScan from scratch, make sure you have a working Go 1.5+ workspace ([instructions](https://golang.org/doc/install)), then:
+
+```
 go get pkg.re/essentialkaos/sslscan.v5
-````
+```
 
-If you want update sslscan package to latest stable release, do:
+If you want update SSLScan package to latest stable release, do:
 
-````
+```
 go get -u pkg.re/essentialkaos/sslscan.v5
-````
+```
 
 ## Build Status
 
