@@ -34,7 +34,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(err, check.IsNil)
 
 	c.Assert(api.Info.EngineVersion, check.Equals, "1.28.4")
-	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009m")
+	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009n")
 }
 
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
@@ -130,7 +130,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.Chain.Issues, check.Equals, 0)
 
 	c.Assert(details.Chain.Certs[0], check.NotNil)
-	c.Assert(details.Chain.Certs[0].Subject, check.Equals, "CN=ssllabs.com,O=Qualys, Inc.,L=Redwood City,ST=California,C=US")
+	c.Assert(details.Chain.Certs[0].Subject, check.Equals, "CN=ssllabs.com, O=\"Qualys, Inc.\", L=Redwood City, ST=California, C=US")
 	c.Assert(details.Chain.Certs[0].Label, check.Equals, "ssllabs.com")
 	c.Assert(details.Chain.Certs[0].NotBefore, check.Not(check.Equals), int64(0))
 	c.Assert(details.Chain.Certs[0].NotAfter, check.Not(check.Equals), int64(0))
@@ -147,7 +147,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.Chain.Certs[0].Raw, check.Not(check.Equals), "")
 
 	c.Assert(details.Chain.Certs[1], check.NotNil)
-	c.Assert(details.Chain.Certs[1].Subject, check.Equals, "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust, Inc.,C=US")
+	c.Assert(details.Chain.Certs[1].Subject, check.Equals, "CN=Entrust Certification Authority - L1K, OU=\"(c) 2012 Entrust, Inc. - for authorized use only\", OU=See www.entrust.net/legal-terms, O=\"Entrust, Inc.\", C=US")
 	c.Assert(details.Chain.Certs[1].Label, check.Equals, "Entrust Certification Authority - L1K")
 	c.Assert(details.Chain.Certs[1].NotBefore, check.Not(check.Equals), int64(0))
 	c.Assert(details.Chain.Certs[1].NotAfter, check.Not(check.Equals), int64(0))
@@ -164,7 +164,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.Chain.Certs[1].Raw, check.Not(check.Equals), "")
 
 	c.Assert(details.Chain.Certs[2], check.NotNil)
-	c.Assert(details.Chain.Certs[2].Subject, check.Equals, "CN=Entrust Root Certification Authority - G2,OU=(c) 2009 Entrust, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust, Inc.,C=US")
+	c.Assert(details.Chain.Certs[2].Subject, check.Equals, "CN=Entrust Root Certification Authority - G2, OU=\"(c) 2009 Entrust, Inc. - for authorized use only\", OU=See www.entrust.net/legal-terms, O=\"Entrust, Inc.\", C=US")
 	c.Assert(details.Chain.Certs[2].Label, check.Equals, "Entrust Root Certification Authority - G2")
 	c.Assert(details.Chain.Certs[2].NotBefore, check.Not(check.Equals), int64(0))
 	c.Assert(details.Chain.Certs[2].NotAfter, check.Not(check.Equals), int64(0))
