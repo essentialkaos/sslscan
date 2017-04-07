@@ -33,7 +33,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "1.27.3")
+	c.Assert(api.Info.EngineVersion, check.Equals, "1.28.4")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009m")
 }
 
@@ -105,7 +105,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.Key.Strength, check.Equals, 2048)
 
 	c.Assert(details.Cert, check.NotNil)
-	c.Assert(details.Cert.Subject, check.Equals, "CN=ssllabs.com,O=Qualys, Inc.,L=Redwood City,ST=California,C=US")
+	c.Assert(details.Cert.Subject, check.Equals, "CN=ssllabs.com, O=\"Qualys, Inc.\", L=Redwood City, ST=California, C=US")
 	c.Assert(details.Cert.CommonNames, check.DeepEquals, []string{"ssllabs.com"})
 	c.Assert(details.Cert.AltNames, check.DeepEquals, []string{"ssllabs.com", "*.ssllabs.com"})
 	c.Assert(details.Cert.IssuerSubject, check.Equals, "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust, Inc.,C=US")
