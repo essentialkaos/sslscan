@@ -1,4 +1,4 @@
-# SSLScan [![GoDoc](https://godoc.org/pkg.re/essentialkaos/sslscan.v5?status.svg)](https://godoc.org/pkg.re/essentialkaos/sslscan.v5) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/sslscan)](https://goreportcard.com/report/github.com/essentialkaos/sslscan) [![Codebeat](https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0)](https://codebeat.co/projects/github-com-essentialkaos-sslscan) [![License](https://gh.kaos.io/apache2.svg)](LICENSE)
+# SSLScan [![GoDoc](https://godoc.org/pkg.re/essentialkaos/sslscan.v7?status.svg)](https://godoc.org/pkg.re/essentialkaos/sslscan.v7) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/sslscan)](https://goreportcard.com/report/github.com/essentialkaos/sslscan) [![Codebeat](https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0)](https://codebeat.co/projects/github-com-essentialkaos-sslscan) [![License](https://gh.kaos.io/apache2.svg)](LICENSE)
 
 Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 
@@ -13,13 +13,13 @@ git config --global http.https://pkg.re.followRedirects true
 To build the SSLScan from scratch, make sure you have a working Go 1.5+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
-go get pkg.re/essentialkaos/sslscan.v5
+go get pkg.re/essentialkaos/sslscan.v7
 ```
 
 If you want update SSLScan package to latest stable release, do:
 
 ```
-go get -u pkg.re/essentialkaos/sslscan.v5
+go get -u pkg.re/essentialkaos/sslscan.v7
 ```
 
 ## Build Status
