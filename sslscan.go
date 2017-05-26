@@ -11,7 +11,7 @@ package sslscan
 import (
 	"fmt"
 
-	"pkg.re/essentialkaos/ek.v8/req"
+	"pkg.re/essentialkaos/ek.v9/req"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
