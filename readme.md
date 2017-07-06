@@ -2,7 +2,7 @@
 
 Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 
-## Installation
+### Installation
 
 Before the initial install allows git to use redirects for [pkg.re](https://github.com/essentialkaos/pkgre) service (reason why you should do this described [here](https://github.com/essentialkaos/pkgre#git-support)):
 
@@ -22,18 +22,18 @@ If you want update SSLScan package to latest stable release, do:
 go get -u pkg.re/essentialkaos/sslscan.v7
 ```
 
-## Build Status
+### Build Status
 
 | Branch | Status |
-|------------|--------|
+|--------|--------|
 | `master` | [![Build Status](https://travis-ci.org/essentialkaos/sslscan.svg?branch=master)](https://travis-ci.org/essentialkaos/sslscan) |
 | `develop` | [![Build Status](https://travis-ci.org/essentialkaos/sslscan.svg?branch=develop)](https://travis-ci.org/essentialkaos/sslscan) |
 
-## Contributing
+### Contributing
 
 Before contributing to this project please read our [Contributing Guidelines](https://github.com/essentialkaos/contributing-guidelines#contributing-guidelines).
 
-## Terms of Use
+### Terms of Use
 
 This project is not affiliated with SSL Labs and not officially supported by SSL Labs. Before using this package please read [Qualys SSL Labs Terms of Use](https://www.ssllabs.com/downloads/Qualys_SSL_Labs_Terms_of_Use.pdf).
 
@@ -42,6 +42,8 @@ Also you should:
 * Only inspect sites and servers whose owners have given you permission to do so;
 * Be clear that this tool works by sending assessment requests to remote SSL Labs servers and that this information will be shared with them.
 
-## License
+### License
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+<p align="center"><a href="https://essentialkaos.com"><img src="https://gh.kaos.io/ekgh.svg"/></a></p>
