@@ -1,5 +1,5 @@
 {
   "GOLANG": {
-    "TOO_MANY_IVARS": [50, 60, 75, 100]
+    "TOO_MANY_IVARS": [75, 100, 125, 200]
   }
 }
