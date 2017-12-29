@@ -163,7 +163,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.Chain.Certs[1].KeySize, check.Equals, 2048)
 	c.Assert(details.Chain.Certs[1].KeyStrength, check.Equals, 2048)
 	c.Assert(details.Chain.Certs[1].RevocationStatus, check.Equals, REVOCATION_STATUS_NOT_REVOKED)
-	c.Assert(details.Chain.Certs[1].CRLRevocationStatus, check.Equals, REVOCATION_STATUS_REVOCATION_CHECK_ERROR)
+	c.Assert(details.Chain.Certs[1].CRLRevocationStatus, check.Equals, REVOCATION_STATUS_NOT_REVOKED)
 	c.Assert(details.Chain.Certs[1].OCSPRevocationStatus, check.Equals, REVOCATION_STATUS_NOT_REVOKED)
 	c.Assert(details.Chain.Certs[1].Raw, check.Not(check.Equals), "")
 
