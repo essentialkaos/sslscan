@@ -17,7 +17,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "5.1.0"
+const _TESTER_VERSION = "5.1.1"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -37,7 +37,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(api, check.NotNil)
 	c.Assert(err, check.IsNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "1.30.7")
+	c.Assert(api.Info.EngineVersion, check.Equals, "1.30.8")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009o")
 }
 
