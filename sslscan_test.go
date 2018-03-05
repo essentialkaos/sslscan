@@ -17,7 +17,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "5.2.0"
+const _TESTER_VERSION = "6.0.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -331,14 +331,14 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.HPKPPolicy, check.NotNil)
 	c.Assert(details.HPKPPolicy.Header, check.Equals, "")
 	c.Assert(details.HPKPPolicy.Status, check.Equals, HPKP_STATUS_ABSENT)
-	c.Assert(details.HPKPPolicy.Pins, check.DeepEquals, []*Pin{})
-	c.Assert(details.HPKPPolicy.MatchedPins, check.DeepEquals, []*Pin{})
+	c.Assert(details.HPKPPolicy.Pins, check.DeepEquals, []Pin{})
+	c.Assert(details.HPKPPolicy.MatchedPins, check.DeepEquals, []Pin{})
 
 	c.Assert(details.HPKPRoPolicy, check.NotNil)
 	c.Assert(details.HPKPRoPolicy.Header, check.Equals, "")
 	c.Assert(details.HPKPRoPolicy.Status, check.Equals, HPKP_STATUS_ABSENT)
-	c.Assert(details.HPKPRoPolicy.Pins, check.DeepEquals, []*Pin{})
-	c.Assert(details.HPKPRoPolicy.MatchedPins, check.DeepEquals, []*Pin{})
+	c.Assert(details.HPKPRoPolicy.Pins, check.DeepEquals, []Pin{})
+	c.Assert(details.HPKPRoPolicy.MatchedPins, check.DeepEquals, []Pin{})
 
-	c.Assert(details.DrownHosts, check.DeepEquals, []*DrownHost{})
+	c.Assert(details.DrownHosts, check.DeepEquals, []DrownHost{})
 }
