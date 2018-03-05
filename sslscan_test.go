@@ -17,7 +17,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "5.1.1"
+const _TESTER_VERSION = "6.0.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -34,18 +34,24 @@ var _ = check.Suite(&SSLLabsSuite{})
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
 
-	c.Assert(api, check.NotNil)
-	c.Assert(err, check.IsNil)
+	DialTimeout = 3.0
+	RequestTimeout = 3.0
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "1.30.8")
-	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009o")
+	c.Assert(err, check.IsNil)
+	c.Assert(api, check.NotNil)
+
+	c.Assert(api.Info.EngineVersion, check.Equals, "1.31.0")
+	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009p")
 }
 
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
 
-	c.Assert(api, check.NotNil)
+	DialTimeout = 3.0
+	RequestTimeout = 3.0
+
 	c.Assert(err, check.IsNil)
+	c.Assert(api, check.NotNil)
 
 	progress, err := api.Analyze("https://api.ssllabs.com")
 
@@ -331,14 +337,14 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.HPKPPolicy, check.NotNil)
 	c.Assert(details.HPKPPolicy.Header, check.Equals, "")
 	c.Assert(details.HPKPPolicy.Status, check.Equals, HPKP_STATUS_ABSENT)
-	c.Assert(details.HPKPPolicy.Pins, check.DeepEquals, []*Pin{})
-	c.Assert(details.HPKPPolicy.MatchedPins, check.DeepEquals, []*Pin{})
+	c.Assert(details.HPKPPolicy.Pins, check.DeepEquals, []Pin{})
+	c.Assert(details.HPKPPolicy.MatchedPins, check.DeepEquals, []Pin{})
 
 	c.Assert(details.HPKPRoPolicy, check.NotNil)
 	c.Assert(details.HPKPRoPolicy.Header, check.Equals, "")
 	c.Assert(details.HPKPRoPolicy.Status, check.Equals, HPKP_STATUS_ABSENT)
-	c.Assert(details.HPKPRoPolicy.Pins, check.DeepEquals, []*Pin{})
-	c.Assert(details.HPKPRoPolicy.MatchedPins, check.DeepEquals, []*Pin{})
+	c.Assert(details.HPKPRoPolicy.Pins, check.DeepEquals, []Pin{})
+	c.Assert(details.HPKPRoPolicy.MatchedPins, check.DeepEquals, []Pin{})
 
-	c.Assert(details.DrownHosts, check.DeepEquals, []*DrownHost{})
+	c.Assert(details.DrownHosts, check.DeepEquals, []DrownHost{})
 }
