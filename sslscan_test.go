@@ -257,7 +257,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.DHUsesKnownPrimes, check.Equals, 0)
 	c.Assert(details.DHYsReuse, check.Equals, false)
 	c.Assert(details.Logjam, check.Equals, false)
-	c.Assert(details.DrownErrors, check.Equals, true)
+	c.Assert(details.DrownErrors, check.Equals, false)
 	c.Assert(details.DrownVulnerable, check.Equals, false)
 
 	c.Assert(details.SIMS, check.NotNil)
