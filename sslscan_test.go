@@ -17,7 +17,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "6.0.1"
+const _TESTER_VERSION = "7.0.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -34,7 +34,6 @@ var _ = check.Suite(&SSLLabsSuite{})
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
 
-	DialTimeout = 3.0
 	RequestTimeout = 3.0
 
 	c.Assert(err, check.IsNil)
@@ -47,13 +46,12 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
 
-	DialTimeout = 3.0
 	RequestTimeout = 3.0
 
 	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
-	progress, err := api.Analyze("https://api.ssllabs.com")
+	progress, err := api.Analyze("https://api.ssllabs.com", AnalyzeParams{})
 
 	c.Assert(progress, check.NotNil)
 	c.Assert(err, check.IsNil)

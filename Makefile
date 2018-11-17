@@ -11,8 +11,7 @@
 ################################################################################
 
 deps: ## Download dependencies
-	git config --global http.https://pkg.re.followRedirects true
-	go get -d -v pkg.re/essentialkaos/ek.v9
+	go get -d -v github.com/valyala/fasthttp
 
 deps-test: ## Download dependencies for tests
 	git config --global http.https://pkg.re.followRedirects true
