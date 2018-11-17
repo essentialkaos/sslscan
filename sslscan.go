@@ -105,7 +105,7 @@ const (
 )
 
 // Package version
-const VERSION = "9.0.0"
+const VERSION = "9.0.1"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -418,7 +418,7 @@ func NewAPI(app, version string) (*API, error) {
 func (api *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, error) {
 	progress := &AnalyzeProgress{host: host, api: api}
 	query := "host=" + host
-	query += paramsToQuery(params)
+	query += "&" + paramsToQuery(params)
 
 	err := api.doRequest(API_URL_ANALYZE+"?"+query, nil)
 
