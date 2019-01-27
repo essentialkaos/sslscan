@@ -2,8 +2,8 @@
 
 ################################################################################
 
-API_ANALYZE="https://api.ssllabs.com/api/v2/analyze"
-API_DETAILS="https://api.ssllabs.com/api/v2/getEndpointData"
+API_ANALYZE="https://api.ssllabs.com/api/v3/analyze"
+API_DETAILS="https://api.ssllabs.com/api/v3/getEndpointData"
 
 ################################################################################
 
@@ -11,7 +11,7 @@ main() {
   local output_dir="${1:-.}"
   local version status endpoint
 
-  version=$(curl -s "$API_ANALYZE?host=essentialkaos.com" | jq '"v2-" + .engineVersion + "-" + .criteriaVersion' | tr -d '"')
+  version=$(curl -s "$API_ANALYZE?host=essentialkaos.com" | jq '"v3-" + .engineVersion + "-" + .criteriaVersion' | tr -d '"')
 
   echo "Current API version: $version"
 
