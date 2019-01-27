@@ -139,6 +139,15 @@ const (
 	CERT_CHAIN_ISSUE_CANT_VALIDATE
 )
 
+const (
+	PROTOCOL_SSL2  = 512
+	PROTOCOL_SSL3  = 768
+	PROTOCOL_TLS10 = 769
+	PROTOCOL_TLS11 = 770
+	PROTOCOL_TLS12 = 771
+	PROTOCOL_TLS13 = 772
+)
+
 // VERSION is current package version
 const VERSION = "10.0.0"
 
@@ -215,7 +224,7 @@ type EndpointDetails struct {
 	CertChains                     []*ChainCert       `json:"certChains"`                     // server Certificate chains
 	Protocols                      []*Protocol        `json:"protocols"`                      // supported protocols
 	Suites                         []*ProtocolSuites  `json:"suites"`                         // supported cipher suites
-	NoSNISuites                    bool               `json:"noSniSuites"`                    // cipher suites observed only with client that does not support Server Name Indication (SNI)
+	NoSNISuites                    *ProtocolSuites    `json:"noSniSuites"`                    // cipher suites observed only with client that does not support Server Name Indication (SNI)
 	NamedGroups                    *NamedGroups       `json:"namedGroups"`                    // instance of NamedGroups object
 	ServerSignature                string             `json:"serverSignature"`                // contents of the HTTP Server response header when known
 	PrefixDelegation               bool               `json:"prefixDelegation"`               // true if this endpoint is reachable via a hostname with the www prefix
@@ -264,7 +273,7 @@ type EndpointDetails struct {
 	HPKPPolicy                     *HPKPPolicy        `json:"hpkpPolicy"`                     // server's HPKP policy
 	HPKPRoPolicy                   *HPKPPolicy        `json:"hpkpRoPolicy"`                   // server's HPKP RO (Report Only) policy
 	StaticPKPPolicy                *SPKPPolicy        `json:"staticPkpPolicy"`                // server's SPKP policy
-	HTTPTransactions               []*HTTPTransaction `json:""`                               // an slice of HttpTransaction structs
+	HTTPTransactions               []*HTTPTransaction `json:"httpTransactions"`               // an slice of HttpTransaction structs
 	DrownHosts                     []DrownHost        `json:"drownHosts"`                     // list of drown hosts
 	DrownErrors                    bool               `json:"drownErrors"`                    // true if error occurred in drown test
 	DrownVulnerable                bool               `json:"drownVulnerable"`                // true if server vulnerable to drown attack
