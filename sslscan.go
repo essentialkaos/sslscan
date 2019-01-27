@@ -187,7 +187,7 @@ type AnalyzeInfo struct {
 	EngineVersion   string          `json:"engineVersion"`   // assessment engine version (e.g., "1.0.120")
 	CriteriaVersion string          `json:"criteriaVersion"` // grading criteria version (e.g., "2009")
 	CacheExpiryTime int64           `json:"cacheExpiryTime"` // when will the assessment results expire from the cache
-	certHostnames   []string        `json:"certHostnames"`   // the list of certificate hostnames collected from the certificates seen during assessment
+	CertHostnames   []string        `json:"certHostnames"`   // the list of certificate hostnames collected from the certificates seen during assessment
 	Endpoints       []*EndpointInfo `json:"endpoints"`       // list of Endpoint structs
 	Certs           []*Cert         `json:"certs"`           // a list of Cert structs, representing the chain certificates in the order in which they were retrieved from the server
 }
