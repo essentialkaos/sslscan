@@ -290,12 +290,8 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.HTTPTransactions[0].ResponseHeadersRaw, check.Not(check.HasLen), 0)
 	c.Assert(details.HTTPTransactions[0].ResponseHeaders, check.Not(check.HasLen), 0)
 	c.Assert(details.HTTPTransactions[0].FragileServer, check.Equals, false)
-
-	if !details.DrownErrors {
-		c.Assert(details.DrownErrors, check.Equals, false)
-		c.Assert(details.DrownVulnerable, check.Equals, false)
-	}
-
+	c.Assert(details.DrownErrors, check.Equals, false)
+	c.Assert(details.DrownVulnerable, check.Equals, false)
 	c.Assert(details.ImplementsTLS13MandatoryCS, check.Equals, false)
 
 	certs := fullInfo.Certs
@@ -316,8 +312,12 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(certs[0].RevocationStatus, check.Equals, 2)
 	c.Assert(certs[0].CRLRevocationStatus, check.Equals, 2)
 	c.Assert(certs[0].OCSPRevocationStatus, check.Equals, 2)
-	c.Assert(certs[0].DNSCAA, check.Equals, false)
-	c.Assert(certs[0].CAAPolicy, check.IsNil)
+	c.Assert(certs[0].DNSCAA, check.Equals, true)
+	c.Assert(certs[0].CAAPolicy, check.NotNil)
+	c.Assert(certs[0].CAAPolicy.PolicyHostname, check.Equals, "api.ssllabs.com")
+	c.Assert(certs[0].CAAPolicy.CAARecords[0].Tag, check.Equals, "issue")
+	c.Assert(certs[0].CAAPolicy.CAARecords[0].Value, check.Equals, "Digicert.com")
+	c.Assert(certs[0].CAAPolicy.CAARecords[0].Flags, check.Equals, 0)
 	c.Assert(certs[0].MustStaple, check.Equals, false)
 	c.Assert(certs[0].SGC, check.Equals, 0)
 	c.Assert(certs[0].ValidationType, check.Equals, "")
