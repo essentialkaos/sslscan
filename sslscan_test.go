@@ -39,7 +39,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "1.32.16")
+	c.Assert(api.Info.EngineVersion, check.Equals, "1.33.1")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009p")
 }
 
@@ -233,7 +233,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.PrefixDelegation, check.Equals, false)
 	c.Assert(details.NonPrefixDelegation, check.Equals, true)
 	c.Assert(details.VulnBeast, check.Equals, true)
-	c.Assert(details.RenegSupport, check.Equals, 0)
+	c.Assert(details.RenegSupport, check.Equals, 2)
 	c.Assert(details.SessionResumption, check.Equals, 2)
 	c.Assert(details.CompressionMethods, check.Equals, 0)
 	c.Assert(details.SupportsNPN, check.Equals, false)
@@ -293,6 +293,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.DrownErrors, check.Equals, false)
 	c.Assert(details.DrownVulnerable, check.Equals, false)
 	c.Assert(details.ImplementsTLS13MandatoryCS, check.Equals, false)
+	c.Assert(details.ZeroRTTEnabled, check.Equals, -1)
 
 	certs := fullInfo.Certs
 
