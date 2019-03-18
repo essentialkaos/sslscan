@@ -149,7 +149,7 @@ const (
 )
 
 // VERSION is current package version
-const VERSION = "10.0.0"
+const VERSION = "10.1.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -277,7 +277,8 @@ type EndpointDetails struct {
 	DrownHosts                     []DrownHost        `json:"drownHosts"`                     // list of drown hosts
 	DrownErrors                    bool               `json:"drownErrors"`                    // true if error occurred in drown test
 	DrownVulnerable                bool               `json:"drownVulnerable"`                // true if server vulnerable to drown attack
-	ImplementsTLS13MandatoryCS     bool               `json:"implementsTLS13MandatoryCS"`     // -
+	ImplementsTLS13MandatoryCS     bool               `json:"implementsTLS13MandatoryCS"`     // true if server supports mandatory TLS 1.3 cipher suite (TLS_AES_128_GCM_SHA256), null if TLS 1.3 not supported
+	ZeroRTTEnabled                 int                `json:"zeroRTTEnabled"`                 // results of the 0-RTT test
 }
 
 type Cert struct {
