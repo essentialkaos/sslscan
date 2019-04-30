@@ -1,0 +1,11 @@
+[[constraint]]
+  name = "github.com/valyala/fasthttp"
+  version = "20180529.0.0"
+
+[[constraint]]
+  branch = "master"
+  name = "pkg.re/check.v1"
+
+[prune]
+  go-tests = true
+  unused-packages = true
