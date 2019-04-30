@@ -149,7 +149,7 @@ const (
 )
 
 // VERSION is current package version
-const VERSION = "10.1.0"
+const VERSION = "10.2.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -248,6 +248,8 @@ type EndpointDetails struct {
 	RC4WithModern                  bool               `json:"rc4WithModern"`                  // true if RC4 is used with modern clients
 	RC4Only                        bool               `json:"rc4Only"`                        // true if only RC4 suites are supported
 	ForwardSecrecy                 int                `json:"forwardSecrecy"`                 // indicates support for Forward Secrecy
+	SupportAEAD                    bool               `json:"supportsAead"`                   // true if the server supports at least one AEAD suite
+	SupportsCBC                    bool               `json:"supportsCBC"`                    // true if the server supports at least one CBC suite
 	ProtocolIntolerance            int                `json:"protocolIntolerance"`            // indicates protocol version intolerance issues
 	MiscIntolerance                int                `json:"miscIntolerance"`                // indicates protocol version intolerance issues
 	SIMS                           *SIMS              `json:"sims"`                           // sims
@@ -257,6 +259,10 @@ type EndpointDetails struct {
 	OpenSSLLuckyMinus20            int                `json:"openSSLLuckyMinus20"`            // results of the CVE-2016-2107 test
 	Ticketbleed                    int                `json:"ticketbleed"`                    // results of the ticketbleed CVE-2016-9244 test
 	Bleichenbacher                 int                `json:"bleichenbacher"`                 // results of the Return Of Bleichenbacher's Oracle Threat (ROBOT) test
+	ZombiePoodle                   int                `json:"zombiePoodle"`                   // -
+	GoldenDoodle                   int                `json:"goldenDoodle"`                   // -
+	ZeroLengthPaddingOracle        int                `json:"zeroLengthPaddingOracle"`        // -
+	SleepingPoodle                 int                `json:"sleepingPoodle"`                 // -
 	Poodle                         bool               `json:"poodle"`                         // true if the endpoint is vulnerable to POODLE
 	PoodleTLS                      int                `json:"poodleTls"`                      // results of the POODLE TLS test
 	FallbackSCSV                   bool               `json:"fallbackScsv"`                   // true if the server supports TLS_FALLBACK_SCSV, false if it doesn't

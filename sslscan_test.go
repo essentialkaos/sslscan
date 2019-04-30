@@ -17,7 +17,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "8.0.0"
+const _TESTER_VERSION = "8.1.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -39,7 +39,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "1.33.1")
+	c.Assert(api.Info.EngineVersion, check.Equals, "1.34.2")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009p")
 }
 
@@ -251,6 +251,8 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.RC4WithModern, check.Equals, false)
 	c.Assert(details.RC4Only, check.Equals, false)
 	c.Assert(details.ForwardSecrecy, check.Equals, 4)
+	c.Assert(details.SupportAEAD, check.Equals, true)
+	c.Assert(details.SupportsCBC, check.Equals, true)
 	c.Assert(details.ProtocolIntolerance, check.Equals, 0)
 	c.Assert(details.MiscIntolerance, check.Equals, 0)
 	c.Assert(details.Heartbleed, check.Equals, false)
@@ -259,6 +261,10 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.OpenSSLLuckyMinus20, check.Equals, LUCKY_MINUS_STATUS_NOT_VULNERABLE)
 	c.Assert(details.Ticketbleed, check.Equals, TICKETBLEED_STATUS_NOT_VULNERABLE)
 	c.Assert(details.Bleichenbacher, check.Equals, BLEICHENBACHER_STATUS_NOT_VULNERABLE)
+	c.Assert(details.ZombiePoodle, check.Equals, POODLE_STATUS_NOT_VULNERABLE)
+	c.Assert(details.GoldenDoodle, check.Equals, POODLE_STATUS_NOT_VULNERABLE)
+	c.Assert(details.ZeroLengthPaddingOracle, check.Equals, 1)
+	c.Assert(details.SleepingPoodle, check.Equals, POODLE_STATUS_NOT_VULNERABLE)
 	c.Assert(details.Poodle, check.Equals, false)
 	c.Assert(details.PoodleTLS, check.Equals, POODLE_STATUS_NOT_VULNERABLE)
 	c.Assert(details.FallbackSCSV, check.Equals, true)
