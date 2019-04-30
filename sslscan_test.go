@@ -251,6 +251,8 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.RC4WithModern, check.Equals, false)
 	c.Assert(details.RC4Only, check.Equals, false)
 	c.Assert(details.ForwardSecrecy, check.Equals, 4)
+	c.Assert(details.SupportAEAD, check.Equals, true)
+	c.Assert(details.SupportsCBC, check.Equals, true)
 	c.Assert(details.ProtocolIntolerance, check.Equals, 0)
 	c.Assert(details.MiscIntolerance, check.Equals, 0)
 	c.Assert(details.Heartbleed, check.Equals, false)
