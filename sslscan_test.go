@@ -39,7 +39,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "1.34.2")
+	c.Assert(api.Info.EngineVersion, check.Equals, "1.35.1")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009p")
 }
 
@@ -166,7 +166,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.Suites[2].List[11].NamedGroupBits, check.Equals, 0)
 	c.Assert(details.Suites[2].List[11].NamedGroupID, check.Equals, 0)
 	c.Assert(details.Suites[2].List[11].NamedGroupName, check.Equals, "")
-	c.Assert(details.Suites[2].List[11].Q, check.IsNil)
+	c.Assert(details.Suites[2].List[11].Q, check.NotNil)
 
 	c.Assert(details.NamedGroups, check.NotNil)
 	c.Assert(details.NamedGroups.List, check.HasLen, 1)
