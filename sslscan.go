@@ -149,7 +149,7 @@ const (
 )
 
 // VERSION is current package version
-const VERSION = "10.2.1"
+const VERSION = "11.0.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -169,6 +169,8 @@ type AnalyzeParams struct {
 type AnalyzeProgress struct {
 	host       string
 	prevStatus string
+
+	maxAge int
 
 	api *API
 }
@@ -544,7 +546,7 @@ func NewAPI(app, version string) (*API, error) {
 
 // Analyze start check for host
 func (api *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, error) {
-	progress := &AnalyzeProgress{host: host, api: api}
+	progress := &AnalyzeProgress{host: host, api: api, maxAge: params.MaxAge}
 	query := "host=" + host
 	query += "&" + paramsToQuery(params)
 
@@ -558,11 +560,19 @@ func (api *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, er
 }
 
 // Info return short info
-func (ap *AnalyzeProgress) Info(detailed bool) (*AnalyzeInfo, error) {
+func (ap *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) {
 	query := "host=" + ap.host
 
 	if detailed {
 		query += "&all=on"
+	}
+
+	if fromCache {
+		query += "&fromCache=on"
+
+		if ap.maxAge > 0 {
+			query += "&maxAge=" + fmt.Sprintf("%d", ap.maxAge)
+		}
 	}
 
 	info := &AnalyzeInfo{}
@@ -578,11 +588,11 @@ func (ap *AnalyzeProgress) Info(detailed bool) (*AnalyzeInfo, error) {
 }
 
 // GetEndpointInfo returns detailed endpoint info
-func (ap *AnalyzeProgress) GetEndpointInfo(ip string) (*EndpointInfo, error) {
+func (ap *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*EndpointInfo, error) {
 	var err error
 
 	if ap.prevStatus != STATUS_READY {
-		_, err = ap.Info(false)
+		_, err = ap.Info(false, false)
 
 		if err != nil {
 			return nil, err
@@ -594,8 +604,16 @@ func (ap *AnalyzeProgress) GetEndpointInfo(ip string) (*EndpointInfo, error) {
 	}
 
 	query := "host=" + ap.host + "&s=" + ip
-	info := &EndpointInfo{}
 
+	if fromCache {
+		query += "&fromCache=on"
+
+		if ap.maxAge > 0 {
+			query += "&maxAge=" + fmt.Sprintf("%d", ap.maxAge)
+		}
+	}
+
+	info := &EndpointInfo{}
 	err = ap.api.doRequest(API_URL_DETAILED+"?"+query, info)
 
 	if err != nil {
