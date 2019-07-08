@@ -58,10 +58,10 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	var info *AnalyzeInfo
 
-	fmt.Printf("Progress: ")
+	fmt.Printf("Progress: ∙")
 
 	for {
-		info, err = progress.Info(false)
+		info, err = progress.Info(false, true)
 
 		c.Assert(info, check.NotNil)
 		c.Assert(err, check.IsNil)
@@ -98,7 +98,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(info.Endpoints[0].Delegation, check.Equals, 1)
 	c.Assert(info.Endpoints[0].Details, check.IsNil)
 
-	fullInfo, err := progress.Info(true)
+	fullInfo, err := progress.Info(true, true)
 
 	c.Assert(err, check.IsNil)
 	c.Assert(fullInfo, check.NotNil)
