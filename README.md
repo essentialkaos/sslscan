@@ -16,7 +16,7 @@ Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 
 ### Installation
 
-To build the SSLScan from scratch, make sure you have a working Go 1.9+ workspace ([instructions](https://golang.org/doc/install)), then:
+To build the SSLScan from scratch, make sure you have a working Go 1.10+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
 go get pkg.re/essentialkaos/sslscan.v11
