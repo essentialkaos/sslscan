@@ -17,7 +17,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "8.1.0"
+const _TESTER_VERSION = "8.2.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -39,7 +39,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "1.35.3")
+	c.Assert(api.Info.EngineVersion, check.Equals, "1.36.1")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009q")
 }
 
@@ -203,31 +203,31 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.SIMS.Results[0].KeyAlg, check.Equals, "RSA")
 	c.Assert(details.SIMS.Results[0].KeySize, check.Equals, 2048)
 	c.Assert(details.SIMS.Results[0].SigAlg, check.Equals, "SHA256withRSA")
-	c.Assert(details.SIMS.Results[15].Client, check.NotNil)
-	c.Assert(details.SIMS.Results[15].Client.ID, check.Equals, 153)
-	c.Assert(details.SIMS.Results[15].Client.Name, check.Equals, "Chrome")
-	c.Assert(details.SIMS.Results[15].Client.Platform, check.Equals, "Win 10")
-	c.Assert(details.SIMS.Results[15].Client.Version, check.Equals, "70")
-	c.Assert(details.SIMS.Results[15].Client.IsReference, check.Equals, false)
-	c.Assert(details.SIMS.Results[15].ErrorCode, check.Equals, 0)
-	c.Assert(details.SIMS.Results[15].ErrorMessage, check.Equals, "")
-	c.Assert(details.SIMS.Results[15].Attempts, check.Equals, 1)
-	c.Assert(details.SIMS.Results[15].CertChainID, check.Not(check.Equals), "")
-	c.Assert(details.SIMS.Results[15].ProtocolID, check.Equals, 771)
-	c.Assert(details.SIMS.Results[15].SuiteID, check.Equals, 49199)
-	c.Assert(details.SIMS.Results[15].SuiteName, check.Equals, "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256")
-	c.Assert(details.SIMS.Results[15].KxType, check.Equals, "ECDH")
-	c.Assert(details.SIMS.Results[15].KxStrength, check.Equals, 3072)
-	c.Assert(details.SIMS.Results[15].DHBits, check.Equals, 0)
-	c.Assert(details.SIMS.Results[15].DHG, check.Equals, 0)
-	c.Assert(details.SIMS.Results[15].DHP, check.Equals, 0)
-	c.Assert(details.SIMS.Results[15].DHYs, check.Equals, 0)
-	c.Assert(details.SIMS.Results[15].NamedGroupBits, check.Equals, 256)
-	c.Assert(details.SIMS.Results[15].NamedGroupID, check.Equals, 23)
-	c.Assert(details.SIMS.Results[15].NamedGroupName, check.Equals, "secp256r1")
-	c.Assert(details.SIMS.Results[15].KeyAlg, check.Equals, "RSA")
-	c.Assert(details.SIMS.Results[15].KeySize, check.Equals, 2048)
-	c.Assert(details.SIMS.Results[15].SigAlg, check.Equals, "SHA256withRSA")
+	c.Assert(details.SIMS.Results[16].Client, check.NotNil)
+	c.Assert(details.SIMS.Results[16].Client.ID, check.Equals, 153)
+	c.Assert(details.SIMS.Results[16].Client.Name, check.Equals, "Chrome")
+	c.Assert(details.SIMS.Results[16].Client.Platform, check.Equals, "Win 10")
+	c.Assert(details.SIMS.Results[16].Client.Version, check.Equals, "70")
+	c.Assert(details.SIMS.Results[16].Client.IsReference, check.Equals, false)
+	c.Assert(details.SIMS.Results[16].ErrorCode, check.Equals, 0)
+	c.Assert(details.SIMS.Results[16].ErrorMessage, check.Equals, "")
+	c.Assert(details.SIMS.Results[16].Attempts, check.Equals, 1)
+	c.Assert(details.SIMS.Results[16].CertChainID, check.Not(check.Equals), "")
+	c.Assert(details.SIMS.Results[16].ProtocolID, check.Equals, 771)
+	c.Assert(details.SIMS.Results[16].SuiteID, check.Equals, 49199)
+	c.Assert(details.SIMS.Results[16].SuiteName, check.Equals, "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256")
+	c.Assert(details.SIMS.Results[16].KxType, check.Equals, "ECDH")
+	c.Assert(details.SIMS.Results[16].KxStrength, check.Equals, 3072)
+	c.Assert(details.SIMS.Results[16].DHBits, check.Equals, 0)
+	c.Assert(details.SIMS.Results[16].DHG, check.Equals, 0)
+	c.Assert(details.SIMS.Results[16].DHP, check.Equals, 0)
+	c.Assert(details.SIMS.Results[16].DHYs, check.Equals, 0)
+	c.Assert(details.SIMS.Results[16].NamedGroupBits, check.Equals, 256)
+	c.Assert(details.SIMS.Results[16].NamedGroupID, check.Equals, 23)
+	c.Assert(details.SIMS.Results[16].NamedGroupName, check.Equals, "secp256r1")
+	c.Assert(details.SIMS.Results[16].KeyAlg, check.Equals, "RSA")
+	c.Assert(details.SIMS.Results[16].KeySize, check.Equals, 2048)
+	c.Assert(details.SIMS.Results[16].SigAlg, check.Equals, "SHA256withRSA")
 
 	c.Assert(details.ServerSignature, check.Equals, "Apache")
 	c.Assert(details.PrefixDelegation, check.Equals, false)
@@ -323,7 +323,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(certs[0].CAAPolicy, check.NotNil)
 	c.Assert(certs[0].CAAPolicy.PolicyHostname, check.Equals, "api.ssllabs.com")
 	c.Assert(certs[0].CAAPolicy.CAARecords[0].Tag, check.Equals, "issue")
-	c.Assert(certs[0].CAAPolicy.CAARecords[0].Value, check.Equals, "comodoca.com")
+	// c.Assert(certs[0].CAAPolicy.CAARecords[0].Value, check.Equals, "digicert.com")
 	c.Assert(certs[0].CAAPolicy.CAARecords[0].Flags, check.Equals, 0)
 	c.Assert(certs[0].MustStaple, check.Equals, false)
 	c.Assert(certs[0].SGC, check.Equals, 0)
