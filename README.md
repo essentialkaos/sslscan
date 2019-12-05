@@ -4,7 +4,7 @@
   <a href="https://godoc.org/pkg.re/essentialkaos/sslscan.v11"><img src="https://godoc.org/github.com/essentialkaos/sslscan?status.svg"></a>
   <a href="https://goreportcard.com/report/github.com/essentialkaos/sslscan"><img src="https://goreportcard.com/badge/github.com/essentialkaos/sslscan"></a>
   <a href="https://codebeat.co/projects/github-com-essentialkaos-sslscan"><img src="https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0"></a>
-  <a href="https://travis-ci.org/essentialkaos/sslscan"><img src="https://travis-ci.org/essentialkaos/sslscan.svg"></a>
+  <a href="https://travis-ci.com/essentialkaos/sslscan"><img src="https://travis-ci.com/essentialkaos/sslscan.svg"></a>
   <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
 </p>
 
@@ -32,8 +32,8 @@ go get -u pkg.re/essentialkaos/sslscan.v11
 
 | Branch | Status |
 |--------|--------|
-| `master` | [![Build Status](https://travis-ci.org/essentialkaos/sslscan.svg?branch=master)](https://travis-ci.org/essentialkaos/sslscan) |
-| `develop` | [![Build Status](https://travis-ci.org/essentialkaos/sslscan.svg?branch=develop)](https://travis-ci.org/essentialkaos/sslscan) |
+| `master` | [![Build Status](https://travis-ci.com/essentialkaos/sslscan.svg?branch=master)](https://travis-ci.com/essentialkaos/sslscan) |
+| `develop` | [![Build Status](https://travis-ci.com/essentialkaos/sslscan.svg?branch=develop)](https://travis-ci.com/essentialkaos/sslscan) |
 
 ### Contributing
 
