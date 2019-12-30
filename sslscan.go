@@ -149,7 +149,7 @@ const (
 )
 
 // VERSION is current package version
-const VERSION = "11.0.0"
+const VERSION = "12.0.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -331,11 +331,8 @@ type ChainCert struct {
 }
 
 type TrustPath struct {
-	CertIDs       []string      `json:"certIds"`       // list of certificate ID from leaf to root
-	Trust         []*TrustStore `json:"trust"`         // trust object. This object shows info about the trusted certificate by using Mozilla trust store
-	IsPinned      bool          `json:"isPinned"`      // true if a key is pinned, else false
-	MatchedPins   int           `json:"mactchedPins"`  // number of matched pins with HPKP policy
-	UnmatchedPins int           `json:"unmatchedPins"` // number of unmatched pins with HPKP policy
+	CertIDs []string      `json:"certIds"` // list of certificate ID from leaf to root
+	Trust   []*TrustStore `json:"trust"`   // trust object. This object shows info about the trusted certificate by using Mozilla trust store
 }
 
 type TrustStore struct {
