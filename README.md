@@ -1,7 +1,7 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/sslscan.svg"/></a></p>
 
 <p align="center">
-  <a href="https://godoc.org/pkg.re/essentialkaos/sslscan.v11"><img src="https://godoc.org/github.com/essentialkaos/sslscan?status.svg"></a>
+  <a href="https://godoc.org/pkg.re/essentialkaos/sslscan.v12"><img src="https://godoc.org/github.com/essentialkaos/sslscan?status.svg"></a>
   <a href="https://goreportcard.com/report/github.com/essentialkaos/sslscan"><img src="https://goreportcard.com/badge/github.com/essentialkaos/sslscan"></a>
   <a href="https://codebeat.co/projects/github-com-essentialkaos-sslscan"><img src="https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0"></a>
   <a href="https://travis-ci.com/essentialkaos/sslscan"><img src="https://travis-ci.com/essentialkaos/sslscan.svg"></a>
@@ -19,13 +19,13 @@ Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 To build the SSLScan from scratch, make sure you have a working Go 1.10+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
-go get pkg.re/essentialkaos/sslscan.v11
+go get pkg.re/essentialkaos/sslscan.v12
 ```
 
 If you want update SSLScan package to latest stable release, do:
 
 ```
-go get -u pkg.re/essentialkaos/sslscan.v11
+go get -u pkg.re/essentialkaos/sslscan.v12
 ```
 
 ### Build Status
