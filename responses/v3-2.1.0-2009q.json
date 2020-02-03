@@ -7,10 +7,10 @@
   "hasWarnings": false,
   "isExceptional": true,
   "progress": 100,
-  "duration": 98164,
+  "duration": 76720,
   "delegation": 1,
   "details": {
-    "hostStartTime": 1577708331369,
+    "hostStartTime": 1580735088749,
     "certChains": [
       {
         "id": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
@@ -172,16 +172,6 @@
     ],
     "protocols": [
       {
-        "id": 769,
-        "name": "TLS",
-        "version": "1.0"
-      },
-      {
-        "id": 770,
-        "name": "TLS",
-        "version": "1.1"
-      },
-      {
         "id": 771,
         "name": "TLS",
         "version": "1.2"
@@ -193,62 +183,6 @@
       }
     ],
     "suites": [
-      {
-        "protocol": 769,
-        "list": [
-          {
-            "id": 49172,
-            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-            "cipherStrength": 256,
-            "kxType": "ECDH",
-            "kxStrength": 3072,
-            "namedGroupBits": 256,
-            "namedGroupId": 29,
-            "namedGroupName": "x25519",
-            "q": 1
-          },
-          {
-            "id": 49171,
-            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
-            "cipherStrength": 128,
-            "kxType": "ECDH",
-            "kxStrength": 3072,
-            "namedGroupBits": 256,
-            "namedGroupId": 29,
-            "namedGroupName": "x25519",
-            "q": 1
-          }
-        ],
-        "preference": true
-      },
-      {
-        "protocol": 770,
-        "list": [
-          {
-            "id": 49172,
-            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-            "cipherStrength": 256,
-            "kxType": "ECDH",
-            "kxStrength": 3072,
-            "namedGroupBits": 256,
-            "namedGroupId": 29,
-            "namedGroupName": "x25519",
-            "q": 1
-          },
-          {
-            "id": 49171,
-            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
-            "cipherStrength": 128,
-            "kxType": "ECDH",
-            "kxStrength": 3072,
-            "namedGroupBits": 256,
-            "namedGroupId": 29,
-            "namedGroupName": "x25519",
-            "q": 1
-          }
-        ],
-        "preference": true
-      },
       {
         "protocol": 771,
         "list": [
@@ -370,7 +304,7 @@
     "serverSignature": "PEW-PEW-SERVER",
     "prefixDelegation": false,
     "nonPrefixDelegation": true,
-    "vulnBeast": true,
+    "vulnBeast": false,
     "renegSupport": 2,
     "sessionResumption": 2,
     "compressionMethods": 0,
@@ -399,10 +333,8 @@
             "isReference": false
           },
           "errorCode": 1,
-          "errorMessage": "Server sent fatal alert: handshake_failure",
-          "attempts": 1,
-          "alertType": 2,
-          "alertCode": 40
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -411,20 +343,9 @@
             "version": "4.0.4",
             "isReference": false
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49172,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 15360,
-          "namedGroupBits": 521,
-          "namedGroupId": 25,
-          "namedGroupName": "secp521r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -433,20 +354,9 @@
             "version": "4.1.1",
             "isReference": false
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49172,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 15360,
-          "namedGroupBits": 521,
-          "namedGroupId": 25,
-          "namedGroupName": "secp521r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -455,20 +365,9 @@
             "version": "4.2.2",
             "isReference": false
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49172,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 15360,
-          "namedGroupBits": 521,
-          "namedGroupId": 25,
-          "namedGroupName": "secp521r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -477,20 +376,9 @@
             "version": "4.3",
             "isReference": false
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49172,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 15360,
-          "namedGroupBits": 521,
-          "namedGroupId": 25,
-          "namedGroupName": "secp521r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -645,20 +533,9 @@
             "version": "Jan 2015",
             "isReference": false
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49172,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 15360,
-          "namedGroupBits": 521,
-          "namedGroupId": 25,
-          "namedGroupName": "secp521r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -919,20 +796,9 @@
             "version": "7",
             "isReference": false
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49172,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 15360,
-          "namedGroupBits": 521,
-          "namedGroupId": 25,
-          "namedGroupName": "secp521r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -943,10 +809,8 @@
             "isReference": false
           },
           "errorCode": 1,
-          "errorMessage": "Server sent fatal alert: handshake_failure",
-          "attempts": 1,
-          "alertType": 2,
-          "alertCode": 40
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -956,20 +820,9 @@
             "version": "8-10",
             "isReference": true
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49172,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 15360,
-          "namedGroupBits": 521,
-          "namedGroupId": 25,
-          "namedGroupName": "secp521r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -1025,20 +878,9 @@
             "version": "10",
             "isReference": false
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49172,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 7680,
-          "namedGroupBits": 384,
-          "namedGroupId": 24,
-          "namedGroupName": "secp384r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -1209,10 +1051,8 @@
             "isReference": false
           },
           "errorCode": 1,
-          "errorMessage": "Server sent fatal alert: handshake_failure",
-          "attempts": 1,
-          "alertType": 2,
-          "alertCode": 40
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -1221,20 +1061,9 @@
             "version": "7u25",
             "isReference": false
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49171,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 15360,
-          "namedGroupBits": 521,
-          "namedGroupId": 25,
-          "namedGroupName": "secp521r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -1302,10 +1131,8 @@
             "isReference": false
           },
           "errorCode": 1,
-          "errorMessage": "Server sent fatal alert: handshake_failure",
-          "attempts": 1,
-          "alertType": 2,
-          "alertCode": 40
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -1399,20 +1226,9 @@
             "version": "5.1.9",
             "isReference": false
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49172,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 15360,
-          "namedGroupBits": 521,
-          "namedGroupId": 25,
-          "namedGroupName": "secp521r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -1445,20 +1261,9 @@
             "version": "6.0.4",
             "isReference": true
           },
-          "errorCode": 0,
-          "attempts": 1,
-          "certChainId": "ff8a173ccfbf4b02c2aa1db43a5ed08081129e11b30397b5bd584c96065529a6",
-          "protocolId": 769,
-          "suiteId": 49172,
-          "suiteName": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-          "kxType": "ECDH",
-          "kxStrength": 15360,
-          "namedGroupBits": 521,
-          "namedGroupId": 25,
-          "namedGroupName": "secp521r1",
-          "keyAlg": "RSA",
-          "keySize": 4096,
-          "sigAlg": "SHA256withRSA"
+          "errorCode": 1,
+          "errorMessage": "Protocol mismatch (not simulated)",
+          "attempts": 0
         },
         {
           "client": {
@@ -1781,25 +1586,25 @@
         "source": "Chrome",
         "hostname": "essentialkaos.com",
         "status": "absent",
-        "sourceTime": 1577705941803
+        "sourceTime": 1580734141630
       },
       {
         "source": "Edge",
         "hostname": "essentialkaos.com",
         "status": "absent",
-        "sourceTime": 1577705943892
+        "sourceTime": 1580732881913
       },
       {
         "source": "Firefox",
         "hostname": "essentialkaos.com",
         "status": "absent",
-        "sourceTime": 1577705943892
+        "sourceTime": 1580732881913
       },
       {
         "source": "IE",
         "hostname": "essentialkaos.com",
         "status": "absent",
-        "sourceTime": 1577705943892
+        "sourceTime": 1580732881913
       }
     ],
     "hpkpPolicy": {
@@ -1854,7 +1659,7 @@
         ],
         "responseLine": "HTTP/1.1 200 OK",
         "responseHeadersRaw": [
-          "Date: Mon, 30 Dec 2019 12:19:01 GMT",
+          "Date: Mon, 03 Feb 2020 13:04:58 GMT",
           "Content-Type: text/html",
           "Content-Length: 2875",
           "Last-Modified: Fri, 02 Nov 2018 10:39:51 GMT",
@@ -1873,7 +1678,7 @@
         "responseHeaders": [
           {
             "name": "Date",
-            "value": "Mon, 30 Dec 2019 12:19:01 GMT"
+            "value": "Mon, 03 Feb 2020 13:04:58 GMT"
           },
           {
             "name": "Content-Type",
