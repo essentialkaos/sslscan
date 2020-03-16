@@ -30,7 +30,7 @@ main() {
 
     endpoint=$(curl -s "$API_ANALYZE?host=essentialkaos.com" | jq '.endpoints[0].ipAddress' | tr -d '"')
 
-    curl -s "$API_DETAILS?host=essentialkaos.com&s=$endpoint" > "$output_dir/$version.json"
+    curl -s "$API_DETAILS?host=essentialkaos.com&s=$endpoint" | jq '.' > "$output_dir/$version.json"
     echo -e "" >> "$output_dir/$version.json"
 
     echo "Data saved as $output_dir/$version.json"
