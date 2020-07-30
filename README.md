@@ -5,6 +5,7 @@
   <a href="https://goreportcard.com/report/github.com/essentialkaos/sslscan"><img src="https://goreportcard.com/badge/github.com/essentialkaos/sslscan"></a>
   <a href="https://codebeat.co/projects/github-com-essentialkaos-sslscan"><img src="https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0"></a>
   <a href="https://travis-ci.com/essentialkaos/sslscan"><img src="https://travis-ci.com/essentialkaos/sslscan.svg"></a>
+  <a href="https://github.com/essentialkaos/sslscan/actions?query=workflow%3ACodeQL"><img src="https://github.com/essentialkaos/sslscan/workflows/CodeQL/badge.svg" /></a>
   <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
 </p>
 
