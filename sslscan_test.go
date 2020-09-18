@@ -39,7 +39,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "2.1.5")
+	c.Assert(api.Info.EngineVersion, check.Equals, "2.1.7")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009q")
 }
 
@@ -268,7 +268,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	certs := fullInfo.Certs
 
-	c.Assert(certs, check.HasLen, 3)
+	c.Assert(certs, check.HasLen, 5)
 	c.Assert(certs[0].ID, check.Equals, "d3daa0d8c29117d68ec1b55a5afeffe12e0b71e13239c4d70d15b713b97ecc22")
 	c.Assert(certs[0].Subject, check.Not(check.Equals), "")
 	c.Assert(certs[0].SerialNumber, check.Equals, "056f9c1dd2b89a95528f3ab2470ff762")
