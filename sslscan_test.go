@@ -60,11 +60,14 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	fmt.Printf("Progress: ∙")
 
-	for {
+	lastSuccess := time.Now()
+
+	for range time.NewTicker(5 * time.Second).C {
 		info, err = progress.Info(false, true)
 
-		c.Assert(info, check.NotNil)
-		c.Assert(err, check.IsNil)
+		if info != nil && err == nil {
+			lastSuccess = time.Now()
+		}
 
 		if info.Status == STATUS_ERROR {
 			c.Fatal(info.StatusMessage)
@@ -74,9 +77,11 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 			break
 		}
 
-		fmt.Printf("∙")
+		if time.Since(lastSuccess) > 30*time.Second {
+			c.Fatal("Can't get result from API more than 30 sec")
+		}
 
-		time.Sleep(5 * time.Second)
+		fmt.Printf("∙")
 	}
 
 	fmt.Println(" DONE")
