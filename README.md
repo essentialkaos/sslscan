@@ -4,7 +4,7 @@
   <a href="https://godoc.org/pkg.re/essentialkaos/sslscan.v12"><img src="https://godoc.org/github.com/essentialkaos/sslscan?status.svg"></a>
   <a href="https://goreportcard.com/report/github.com/essentialkaos/sslscan"><img src="https://goreportcard.com/badge/github.com/essentialkaos/sslscan"></a>
   <a href="https://codebeat.co/projects/github-com-essentialkaos-sslscan"><img src="https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0"></a>
-  <a href="https://travis-ci.com/essentialkaos/sslscan"><img src="https://travis-ci.com/essentialkaos/sslscan.svg"></a>
+  <a href="https://github.com/essentialkaos/sslscan/actions"><img src="https://github.com/essentialkaos/sslscan/workflows/CI/badge.svg" alt="GitHub Actions Status" /></a>
   <a href="https://github.com/essentialkaos/sslscan/actions?query=workflow%3ACodeQL"><img src="https://github.com/essentialkaos/sslscan/workflows/CodeQL/badge.svg" /></a>
   <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
 </p>
@@ -17,7 +17,7 @@ Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 
 ### Installation
 
-To build the SSLScan from scratch, make sure you have a working Go 1.10+ workspace ([instructions](https://golang.org/doc/install)), then:
+To build the SSLScan from scratch, make sure you have a working Go 1.14+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
 go get pkg.re/essentialkaos/sslscan.v12
@@ -33,8 +33,8 @@ go get -u pkg.re/essentialkaos/sslscan.v12
 
 | Branch | Status |
 |--------|--------|
-| `master` | [![Build Status](https://travis-ci.com/essentialkaos/sslscan.svg?branch=master)](https://travis-ci.com/essentialkaos/sslscan) |
-| `develop` | [![Build Status](https://travis-ci.com/essentialkaos/sslscan.svg?branch=develop)](https://travis-ci.com/essentialkaos/sslscan) |
+| `master` | [![CI](https://github.com/essentialkaos/sslscan/workflows/CI/badge.svg?branch=master)](https://github.com/essentialkaos/sslscan/actions) |
+| `develop` | [![CI](https://github.com/essentialkaos/sslscan/workflows/CI/badge.svg?branch=develop)](https://github.com/essentialkaos/sslscan/actions) |
 
 ### Contributing
 
