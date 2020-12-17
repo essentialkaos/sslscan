@@ -1,7 +1,7 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/sslscan.svg"/></a></p>
 
 <p align="center">
-  <a href="https://godoc.org/pkg.re/essentialkaos/sslscan.v12"><img src="https://godoc.org/github.com/essentialkaos/sslscan?status.svg"></a>
+  <a href="https://pkg.go.dev/pkg.re/essentialkaos/sslscan.v12"><img src="https://gh.kaos.st/godoc.svg" alt="PkgGoDev"></a>
   <a href="https://goreportcard.com/report/github.com/essentialkaos/sslscan"><img src="https://goreportcard.com/badge/github.com/essentialkaos/sslscan"></a>
   <a href="https://codebeat.co/projects/github-com-essentialkaos-sslscan"><img src="https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0"></a>
   <a href="https://github.com/essentialkaos/sslscan/actions"><img src="https://github.com/essentialkaos/sslscan/workflows/CI/badge.svg" alt="GitHub Actions Status" /></a>
