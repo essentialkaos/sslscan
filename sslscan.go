@@ -149,13 +149,14 @@ const (
 )
 
 // VERSION is current package version
-const VERSION = "12.0.0"
+const VERSION = "13.0.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 type API struct {
-	Info   *Info
-	Client *fasthttp.Client
+	RequestTimeout time.Duration
+	Info           *Info
+	Client         *fasthttp.Client
 }
 
 type AnalyzeParams struct {
@@ -506,8 +507,21 @@ type HTTPHeader struct {
 	Value string `json:"value"`
 }
 
-// RequestTimeout is request timeout in seconds
-var RequestTimeout = 10.0
+// ////////////////////////////////////////////////////////////////////////////////// //
+
+type HTTPError struct {
+	StatusCode   int
+	ResponseData string
+}
+
+func (e *HTTPError) Error() string {
+	return fmt.Sprintf("API returned HTTP code %d", e.StatusCode)
+}
+
+// ////////////////////////////////////////////////////////////////////////////////// //
+
+// RequestTimeout is default request timeout
+var RequestTimeout = 10 * time.Second
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -518,11 +532,10 @@ func NewAPI(app, version string) (*API, error) {
 	}
 
 	api := &API{
+		RequestTimeout: RequestTimeout,
 		Client: &fasthttp.Client{
 			Name:                getUserAgent(app, version),
 			MaxIdleConnDuration: 5 * time.Second,
-			ReadTimeout:         time.Duration(RequestTimeout) * time.Second,
-			WriteTimeout:        time.Duration(RequestTimeout) * time.Second,
 			MaxConnsPerHost:     100,
 		},
 	}
@@ -624,6 +637,8 @@ func (ap *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*Endpoint
 
 // doRequest sends request through http client
 func (api *API) doRequest(uri string, result interface{}) error {
+	var err error
+
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()
 
@@ -632,7 +647,11 @@ func (api *API) doRequest(uri string, result interface{}) error {
 	defer fasthttp.ReleaseRequest(req)
 	defer fasthttp.ReleaseResponse(resp)
 
-	err := api.Client.Do(req, resp)
+	if api.RequestTimeout == 0 {
+		err = api.Client.Do(req, resp)
+	} else {
+		err = api.Client.DoTimeout(req, resp, api.RequestTimeout)
+	}
 
 	if err != nil {
 		return err
@@ -641,7 +660,7 @@ func (api *API) doRequest(uri string, result interface{}) error {
 	statusCode := resp.StatusCode()
 
 	if statusCode != 200 {
-		return fmt.Errorf("API return HTTP code %d", statusCode)
+		return &HTTPError{StatusCode: statusCode, ResponseData: resp.String()}
 	}
 
 	if result == nil {

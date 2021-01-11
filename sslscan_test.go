@@ -17,7 +17,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "9.0.0"
+const _TESTER_VERSION = "10.0.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -34,7 +34,7 @@ var _ = check.Suite(&SSLLabsSuite{})
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
 
-	RequestTimeout = 3.0
+	api.RequestTimeout = 5 * time.Second
 
 	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
@@ -46,7 +46,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
 
-	RequestTimeout = 3.0
+	api.RequestTimeout = 5 * time.Second
 
 	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
