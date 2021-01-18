@@ -59,7 +59,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 		progress, err = api.Analyze("essentialkaos.com", AnalyzeParams{})
 
 		if err != nil {
-			fmt.Printf("Error: %v (%.0g sec since test start)\n", err, time.Since(lastSuccess).Seconds())
+			fmt.Printf("Error: %v (%.0f sec since test start)\n", err, time.Since(lastSuccess).Seconds())
 			if time.Since(lastSuccess) > 3*time.Minute {
 				c.Fatal("Can't ")
 			}
