@@ -53,8 +53,8 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	progress, err := api.Analyze("essentialkaos.com", AnalyzeParams{})
 
-	c.Assert(progress, check.NotNil)
 	c.Assert(err, check.IsNil)
+	c.Assert(progress, check.NotNil)
 
 	var info *AnalyzeInfo
 
