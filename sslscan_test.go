@@ -2,7 +2,7 @@ package sslscan
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2020 ESSENTIAL KAOS                         //
+//                     Copyright (c) 2009-2021 ESSENTIAL KAOS                         //
 //      Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>      //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -17,7 +17,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "10.0.0"
+const _TESTER_VERSION = "10.0.1"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -44,6 +44,8 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 }
 
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
+	var progress *AnalyzeProgress
+
 	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
 
 	api.RequestTimeout = 5 * time.Second
@@ -51,16 +53,28 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
-	progress, err := api.Analyze("essentialkaos.com", AnalyzeParams{})
+	lastSuccess := time.Now()
 
-	c.Assert(progress, check.NotNil)
-	c.Assert(err, check.IsNil)
+	for {
+		progress, err = api.Analyze("essentialkaos.com", AnalyzeParams{})
+
+		if err != nil {
+			fmt.Printf("Error: %v (%.0f sec since test start)\n", err, time.Since(lastSuccess).Seconds())
+			if time.Since(lastSuccess) > 3*time.Minute {
+				c.Fatal("Can't ")
+			}
+			time.Sleep(30 * time.Second)
+		} else {
+			c.Assert(progress, check.NotNil)
+			break
+		}
+	}
 
 	var info *AnalyzeInfo
 
 	fmt.Printf("Progress: ∙")
 
-	lastSuccess := time.Now()
+	lastSuccess = time.Now()
 
 	for range time.NewTicker(5 * time.Second).C {
 		info, err = progress.Info(false, true)
@@ -266,7 +280,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.HTTPTransactions[0].ResponseHeadersRaw, check.Not(check.HasLen), 0)
 	c.Assert(details.HTTPTransactions[0].ResponseHeaders, check.Not(check.HasLen), 0)
 	c.Assert(details.HTTPTransactions[0].FragileServer, check.Equals, false)
-	c.Assert(details.DrownErrors, check.Equals, false)
+	// c.Assert(details.DrownErrors, check.Equals, false) // disabled due to errors on SSLLabs side
 	c.Assert(details.DrownVulnerable, check.Equals, false)
 	c.Assert(details.ImplementsTLS13MandatoryCS, check.Equals, true)
 	c.Assert(details.ZeroRTTEnabled, check.Equals, 0)
