@@ -1,11 +1,11 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/sslscan.svg"/></a></p>
 
 <p align="center">
-  <a href="https://pkg.re/essentialkaos/sslscan.v13?docs"><img src="https://gh.kaos.st/godoc.svg" alt="PkgGoDev"></a>
-  <a href="https://goreportcard.com/report/github.com/essentialkaos/sslscan"><img src="https://goreportcard.com/badge/github.com/essentialkaos/sslscan"></a>
-  <a href="https://codebeat.co/projects/github-com-essentialkaos-sslscan"><img src="https://codebeat.co/badges/59a17b0e-b974-425e-a442-b9bcc3ccf7c0"></a>
-  <a href="https://github.com/essentialkaos/sslscan/actions"><img src="https://github.com/essentialkaos/sslscan/workflows/CI/badge.svg" alt="GitHub Actions Status" /></a>
-  <a href="https://github.com/essentialkaos/sslscan/actions?query=workflow%3ACodeQL"><img src="https://github.com/essentialkaos/sslscan/workflows/CodeQL/badge.svg" /></a>
+  <a href="https://kaos.sh/g/sslscan.v13"><img src="https://gh.kaos.st/godoc.svg" alt="PkgGoDev" /></a>
+  <a href="https://kaos.sh/r/sslscan"><img src="https://kaos.sh/r/sslscan.svg" alt="GoReportCard" /></a>
+  <a href="https://kaos.sh/b/sslscan"><img src="https://kaos.sh/b/59a17b0e-b974-425e-a442-b9bcc3ccf7c0.svg" alt="Codebeat badge" /></a>
+  <a href="https://kaos.sh/w/sslscan/ci"><img src="https://kaos.sh/w/sslscan/ci.svg" alt="GitHub Actions CI Status" /></a>
+  <a href="https://kaos.sh/w/sslscan/codeql"><img src="https://kaos.sh/w/sslscan/codeql.svg" alt="GitHub Actions CodeQL Status" /></a>
   <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
 </p>
 
@@ -20,21 +20,21 @@ Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
 To build the SSLScan from scratch, make sure you have a working Go 1.14+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
-go get pkg.re/essentialkaos/sslscan.v13
+go get -d pkg.re/essentialkaos/sslscan.v13
 ```
 
 If you want update SSLScan package to latest stable release, do:
 
 ```
-go get -u pkg.re/essentialkaos/sslscan.v13
+go get -d -u pkg.re/essentialkaos/sslscan.v13
 ```
 
 ### Build Status
 
 | Branch | Status |
 |--------|--------|
-| `master` | [![CI](https://github.com/essentialkaos/sslscan/workflows/CI/badge.svg?branch=master)](https://github.com/essentialkaos/sslscan/actions) |
-| `develop` | [![CI](https://github.com/essentialkaos/sslscan/workflows/CI/badge.svg?branch=develop)](https://github.com/essentialkaos/sslscan/actions) |
+| `master` | [![CI](https://kaos.sh/w/sslscan/ci.svg?branch=master)](https://kaos.sh/w/sslscan/ci?query=branch:master) |
+| `develop` | [![CI](https://kaos.sh/w/sslscan/ci.svg?branch=develop)](https://kaos.sh/w/sslscan/ci?query=branch:develop) |
 
 ### Contributing
 
