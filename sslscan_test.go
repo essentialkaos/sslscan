@@ -77,7 +77,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	lastSuccess = time.Now()
 
 	for range time.NewTicker(5 * time.Second).C {
-		info, err = progress.Info(false, true)
+		info, err = progress.Info(false, false)
 
 		if info != nil && err == nil {
 			lastSuccess = time.Now()
@@ -280,14 +280,14 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.HTTPTransactions[0].ResponseHeadersRaw, check.Not(check.HasLen), 0)
 	c.Assert(details.HTTPTransactions[0].ResponseHeaders, check.Not(check.HasLen), 0)
 	c.Assert(details.HTTPTransactions[0].FragileServer, check.Equals, false)
-	// c.Assert(details.DrownErrors, check.Equals, false) // disabled due to errors on SSLLabs side
+	c.Assert(details.DrownErrors, check.Equals, false)
 	c.Assert(details.DrownVulnerable, check.Equals, false)
 	c.Assert(details.ImplementsTLS13MandatoryCS, check.Equals, true)
 	c.Assert(details.ZeroRTTEnabled, check.Equals, 0)
 
 	certs := fullInfo.Certs
 
-	c.Assert(certs, check.HasLen, 5)
+	c.Assert(certs, check.HasLen, 4)
 	c.Assert(certs[0].ID, check.Equals, "d3daa0d8c29117d68ec1b55a5afeffe12e0b71e13239c4d70d15b713b97ecc22")
 	c.Assert(certs[0].Subject, check.Not(check.Equals), "")
 	c.Assert(certs[0].SerialNumber, check.Equals, "056f9c1dd2b89a95528f3ab2470ff762")

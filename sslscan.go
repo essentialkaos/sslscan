@@ -149,7 +149,7 @@ const (
 )
 
 // VERSION is current package version
-const VERSION = "13.0.1"
+const VERSION = "13.1.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -558,7 +558,7 @@ func NewAPI(app, version string) (*API, error) {
 func (api *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, error) {
 	progress := &AnalyzeProgress{host: host, api: api, maxAge: params.MaxAge}
 	query := "host=" + host
-	query += "&" + paramsToQuery(params)
+	query += paramsToQuery(params)
 
 	err := api.doRequest(API_URL_ANALYZE+"?"+query, nil)
 
@@ -578,7 +578,7 @@ func (ap *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) 
 	}
 
 	if fromCache {
-		query += "&fromCache=on"
+		query += "&fromCache=" + formatBoolParam(fromCache)
 
 		if ap.maxAge > 0 {
 			query += "&maxAge=" + fmt.Sprintf("%d", ap.maxAge)
@@ -616,7 +616,7 @@ func (ap *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*Endpoint
 	query := "host=" + ap.host + "&s=" + ip
 
 	if fromCache {
-		query += "&fromCache=on"
+		query += "&fromCache=" + formatBoolParam(fromCache)
 
 		if ap.maxAge > 0 {
 			query += "&maxAge=" + fmt.Sprintf("%d", ap.maxAge)
@@ -678,31 +678,30 @@ func (api *API) doRequest(uri string, result interface{}) error {
 func paramsToQuery(params AnalyzeParams) string {
 	var result string
 
-	if params.Public {
-		result += "publish=on&"
-	}
-
-	if params.StartNew {
-		result += "startNew=on&"
-	}
-
-	if params.FromCache {
-		result += "fromCache=on&"
-	}
+	result += "publish=" + formatBoolParam(params.Public) + "&"
+	result += "startNew=" + formatBoolParam(params.StartNew) + "&"
+	result += "fromCache=" + formatBoolParam(params.FromCache) + "&"
 
 	if params.MaxAge != 0 {
 		result += "maxAge=" + fmt.Sprintf("%d", params.MaxAge) + "&"
 	}
 
-	if params.IgnoreMismatch {
-		result += "ignoreMismatch=on&"
-	}
+	result += "ignoreMismatch=" + formatBoolParam(params.IgnoreMismatch)
 
 	if len(result) != 0 {
-		return result[:len(result)-1]
+		return "&" + result
 	}
 
 	return ""
+}
+
+// formatBoolParam formats boolean parameter
+func formatBoolParam(v bool) string {
+	if v == false {
+		return "off"
+	}
+
+	return "on"
 }
 
 // getUserAgent generate user-agent string for client
