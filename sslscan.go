@@ -149,7 +149,7 @@ const (
 )
 
 // VERSION is current package version
-const VERSION = "13.1.0"
+const VERSION = "13.2.0"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -231,7 +231,6 @@ type EndpointDetails struct {
 	HTTPTransactions               []*HTTPTransaction `json:"httpTransactions"`               // an slice of HttpTransaction structs
 	DrownHosts                     []DrownHost        `json:"drownHosts"`                     // list of drown hosts
 	ServerSignature                string             `json:"serverSignature"`                // contents of the HTTP Server response header when known
-	NPNProtocols                   string             `json:"npnProtocols"`                   // space separated list of supported protocols
 	ALPNProtocols                  string             `json:"alpnProtocols"`                  // space separated list of supported ALPN protocols
 	StaplingRevocationErrorMessage string             `json:"staplingRevocationErrorMessage"` // description of the problem with the stapled OCSP response, if any
 	HTTPForwarding                 string             `json:"httpForwarding"`                 // available on a server that responded with a redirection to some other hostname

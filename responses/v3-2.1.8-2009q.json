@@ -7,10 +7,10 @@
   "hasWarnings": false,
   "isExceptional": true,
   "progress": 100,
-  "duration": 73253,
+  "duration": 70787,
   "delegation": 1,
   "details": {
-    "hostStartTime": 1603275924651,
+    "hostStartTime": 1639660027282,
     "certChains": [
       {
         "id": "18f1361483cdff25f6ab36116303201f5d74a35284721fee3ec7d5a1db731726",
@@ -89,79 +89,68 @@
         "noSni": false
       },
       {
-        "id": "fb4e464f9d269fd434a2f0e90fee5debd1857ed7ace1f038f19d006ad17d7f99",
+        "id": "cc57d0827c8aadbf6a519280f940f0ef777b0530124a949d7bbb758bf2046fb9",
         "certIds": [
-          "d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b",
-          "c790b47128447ec0b60f22bfcb795d71c326dd910ee12cbb4cc5a86191eb91bc"
+          "a572ecc422a6e625e5d436018318059478facc2e2c8f524faee7e4534ff59a7d"
         ],
         "trustPaths": [
           {
             "certIds": [
-              "d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b",
-              "c790b47128447ec0b60f22bfcb795d71c326dd910ee12cbb4cc5a86191eb91bc",
-              "4348a0e9444c78cb265e058d5e8944b4d84f9662bd26db257f8934a443c70161"
+              "a572ecc422a6e625e5d436018318059478facc2e2c8f524faee7e4534ff59a7d"
             ],
             "trust": [
               {
                 "rootStore": "Mozilla",
                 "isTrusted": false,
-                "trustErrorMessage": "invalid certificate [Fingerprint SHA256: d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b]"
+                "trustErrorMessage": "path does not chain to a trusted anchor"
               }
             ]
           },
           {
             "certIds": [
-              "d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b",
-              "c790b47128447ec0b60f22bfcb795d71c326dd910ee12cbb4cc5a86191eb91bc",
-              "4348a0e9444c78cb265e058d5e8944b4d84f9662bd26db257f8934a443c70161"
+              "a572ecc422a6e625e5d436018318059478facc2e2c8f524faee7e4534ff59a7d"
             ],
             "trust": [
               {
                 "rootStore": "Apple",
                 "isTrusted": false,
-                "trustErrorMessage": "invalid certificate [Fingerprint SHA256: d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b]"
+                "trustErrorMessage": "path does not chain to a trusted anchor"
               }
             ]
           },
           {
             "certIds": [
-              "d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b",
-              "c790b47128447ec0b60f22bfcb795d71c326dd910ee12cbb4cc5a86191eb91bc",
-              "4348a0e9444c78cb265e058d5e8944b4d84f9662bd26db257f8934a443c70161"
+              "a572ecc422a6e625e5d436018318059478facc2e2c8f524faee7e4534ff59a7d"
             ],
             "trust": [
               {
                 "rootStore": "Android",
                 "isTrusted": false,
-                "trustErrorMessage": "invalid certificate [Fingerprint SHA256: d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b]"
+                "trustErrorMessage": "path does not chain to a trusted anchor"
               }
             ]
           },
           {
             "certIds": [
-              "d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b",
-              "c790b47128447ec0b60f22bfcb795d71c326dd910ee12cbb4cc5a86191eb91bc",
-              "4348a0e9444c78cb265e058d5e8944b4d84f9662bd26db257f8934a443c70161"
+              "a572ecc422a6e625e5d436018318059478facc2e2c8f524faee7e4534ff59a7d"
             ],
             "trust": [
               {
                 "rootStore": "Java",
                 "isTrusted": false,
-                "trustErrorMessage": "invalid certificate [Fingerprint SHA256: d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b]"
+                "trustErrorMessage": "path does not chain to a trusted anchor"
               }
             ]
           },
           {
             "certIds": [
-              "d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b",
-              "c790b47128447ec0b60f22bfcb795d71c326dd910ee12cbb4cc5a86191eb91bc",
-              "4348a0e9444c78cb265e058d5e8944b4d84f9662bd26db257f8934a443c70161"
+              "a572ecc422a6e625e5d436018318059478facc2e2c8f524faee7e4534ff59a7d"
             ],
             "trust": [
               {
                 "rootStore": "Windows",
                 "isTrusted": false,
-                "trustErrorMessage": "invalid certificate [Fingerprint SHA256: d6b1c60d9c704a313465b10811652bf5e4c8b70abf5ff15125f71c6fff0b9d1b]"
+                "trustErrorMessage": "path does not chain to a trusted anchor"
               }
             ]
           }
@@ -286,8 +275,7 @@
     "renegSupport": 2,
     "sessionResumption": 2,
     "compressionMethods": 0,
-    "supportsNpn": true,
-    "npnProtocols": "h2 http/1.1",
+    "supportsNpn": false,
     "supportsAlpn": true,
     "alpnProtocols": "h2 http/1.1",
     "sessionTickets": 1,
@@ -1509,25 +1497,25 @@
         "source": "Chrome",
         "hostname": "essentialkaos.com",
         "status": "absent",
-        "sourceTime": 1603274761752
+        "sourceTime": 1639656844027
       },
       {
         "source": "Edge",
         "hostname": "essentialkaos.com",
         "status": "absent",
-        "sourceTime": 1603274763664
+        "sourceTime": 1639656724647
       },
       {
         "source": "Firefox",
         "hostname": "essentialkaos.com",
         "status": "absent",
-        "sourceTime": 1603274763664
+        "sourceTime": 1639656724647
       },
       {
         "source": "IE",
         "hostname": "essentialkaos.com",
         "status": "absent",
-        "sourceTime": 1603274763664
+        "sourceTime": 1639656724647
       }
     ],
     "hpkpPolicy": {
@@ -1562,7 +1550,7 @@
         ],
         "responseLine": "HTTP/1.1 200 OK",
         "responseHeadersRaw": [
-          "Date: Wed, 21 Oct 2020 10:25:37 GMT",
+          "Date: Thu, 16 Dec 2021 13:07:19 GMT",
           "Content-Type: text/html",
           "Content-Length: 2896",
           "Last-Modified: Sun, 31 May 2020 11:52:15 GMT",
@@ -1583,7 +1571,7 @@
         "responseHeaders": [
           {
             "name": "Date",
-            "value": "Wed, 21 Oct 2020 10:25:37 GMT"
+            "value": "Thu, 16 Dec 2021 13:07:19 GMT"
           },
           {
             "name": "Content-Type",
