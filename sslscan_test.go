@@ -2,7 +2,7 @@ package sslscan
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2021 ESSENTIAL KAOS                         //
+//                     Copyright (c) 2009-2022 ESSENTIAL KAOS                         //
 //      Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>      //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -12,12 +12,12 @@ import (
 	"testing"
 	"time"
 
-	check "pkg.re/essentialkaos/check.v1"
+	check "github.com/essentialkaos/check"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "10.0.1"
+const _TESTER_VERSION = "10.0.2"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -107,8 +107,8 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(info.Status, check.Equals, "READY")
 	c.Assert(info.Endpoints, check.Not(check.HasLen), 0)
 
-	c.Assert(info.Endpoints[0].IPAdress, check.Equals, "5.79.108.150")
-	c.Assert(info.Endpoints[0].ServerName, check.Equals, "curie.kaos.cc")
+	c.Assert(info.Endpoints[0].IPAdress, check.Equals, "70.34.214.206")
+	c.Assert(info.Endpoints[0].ServerName, check.Equals, "70.34.214.206.vultrusercontent.com")
 	c.Assert(info.Endpoints[0].Grade, check.Equals, "A+")
 	c.Assert(info.Endpoints[0].GradeTrustIgnored, check.Equals, "A+")
 	c.Assert(info.Endpoints[0].HasWarnings, check.Equals, false)
@@ -303,11 +303,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(certs[0].RevocationStatus, check.Equals, 2)
 	c.Assert(certs[0].CRLRevocationStatus, check.Equals, 2)
 	c.Assert(certs[0].OCSPRevocationStatus, check.Equals, 2)
-	c.Assert(certs[0].DNSCAA, check.Equals, true)
-	c.Assert(certs[0].CAAPolicy, check.NotNil)
-	c.Assert(certs[0].CAAPolicy.PolicyHostname, check.Equals, "essentialkaos.com")
-	c.Assert(certs[0].CAAPolicy.CAARecords[0].Tag, check.Equals, "iodef")
-	c.Assert(certs[0].CAAPolicy.CAARecords[0].Flags, check.Equals, 0)
+	c.Assert(certs[0].DNSCAA, check.Equals, false)
 	c.Assert(certs[0].MustStaple, check.Equals, false)
 	c.Assert(certs[0].SGC, check.Equals, 0)
 	c.Assert(certs[0].ValidationType, check.Equals, "")
