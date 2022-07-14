@@ -31,6 +31,35 @@ var _ = check.Suite(&SSLLabsSuite{})
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+func (s *SSLLabsSuite) TestErrors(c *check.C) {
+	_, err := NewAPI("", _TESTER_VERSION)
+	c.Assert(err, check.Equals, ErrEmptyClientName)
+	_, err = NewAPI("SSLScanTester", "")
+	c.Assert(err, check.Equals, ErrEmptyClientVersion)
+
+	var api *API
+	_, err = api.Analyze("test.com", AnalyzeParams{})
+	c.Assert(err, check.Equals, ErrNilStruct)
+
+	var ap *AnalyzeProgress
+	_, err = ap.Info(false, false)
+	c.Assert(err, check.Equals, ErrNilStruct)
+	_, err = ap.GetEndpointInfo("0.0.0.0", false)
+	c.Assert(err, check.Equals, ErrNilStruct)
+
+	ap = &AnalyzeProgress{}
+	_, err = ap.Info(false, false)
+	c.Assert(err, check.Equals, ErrNotInitialized)
+	_, err = ap.GetEndpointInfo("0.0.0.0", false)
+	c.Assert(err, check.Equals, ErrNotInitialized)
+
+	ap.api = &API{}
+	_, err = ap.Info(false, false)
+	c.Assert(err, check.Equals, ErrNotInitialized)
+	_, err = ap.GetEndpointInfo("0.0.0.0", false)
+	c.Assert(err, check.Equals, ErrNotInitialized)
+}
+
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
 

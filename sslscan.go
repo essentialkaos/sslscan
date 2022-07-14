@@ -523,18 +523,28 @@ func (e *HTTPError) Error() string {
 // RequestTimeout is default request timeout
 var RequestTimeout = 10 * time.Second
 
+var (
+	ErrEmptyClientName    = fmt.Errorf("Client name can't be empty")
+	ErrEmptyClientVersion = fmt.Errorf("Client version can't be empty")
+	ErrNilStruct          = fmt.Errorf("Struct is nil")
+	ErrNotInitialized     = fmt.Errorf("Struct is not initialized")
+)
+
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // NewAPI create new api struct
-func NewAPI(app, version string) (*API, error) {
-	if app == "" {
-		return nil, fmt.Errorf("App name can't be empty")
+func NewAPI(name, version string) (*API, error) {
+	switch {
+	case name == "":
+		return nil, ErrEmptyClientName
+	case version == "":
+		return nil, ErrEmptyClientVersion
 	}
 
 	api := &API{
 		RequestTimeout: RequestTimeout,
 		Client: &fasthttp.Client{
-			Name:                getUserAgent(app, version),
+			Name:                getUserAgent(name, version),
 			MaxIdleConnDuration: 5 * time.Second,
 			MaxConnsPerHost:     100,
 		},
@@ -556,6 +566,10 @@ func NewAPI(app, version string) (*API, error) {
 
 // Analyze start check for host
 func (api *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, error) {
+	if api == nil {
+		return nil, ErrNilStruct
+	}
+
 	progress := &AnalyzeProgress{host: host, api: api, maxAge: params.MaxAge}
 	query := "host=" + host
 	query += paramsToQuery(params)
@@ -571,6 +585,13 @@ func (api *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, er
 
 // Info return short info
 func (ap *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) {
+	switch {
+	case ap == nil:
+		return nil, ErrNilStruct
+	case ap.api == nil, ap.host == "":
+		return nil, ErrNotInitialized
+	}
+
 	query := "host=" + ap.host
 
 	if detailed {
@@ -599,6 +620,13 @@ func (ap *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) 
 
 // GetEndpointInfo returns detailed endpoint info
 func (ap *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*EndpointInfo, error) {
+	switch {
+	case ap == nil:
+		return nil, ErrNilStruct
+	case ap.api == nil, ap.host == "":
+		return nil, ErrNotInitialized
+	}
+
 	var err error
 
 	if ap.prevStatus != STATUS_READY {
