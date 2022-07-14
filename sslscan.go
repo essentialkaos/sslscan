@@ -644,9 +644,6 @@ func (api *API) doRequest(uri string, result interface{}) error {
 
 	req.SetRequestURI(uri)
 
-	defer fasthttp.ReleaseRequest(req)
-	defer fasthttp.ReleaseResponse(resp)
-
 	if api.RequestTimeout == 0 {
 		err = api.Client.Do(req, resp)
 	} else {
@@ -656,6 +653,9 @@ func (api *API) doRequest(uri string, result interface{}) error {
 	if err != nil {
 		return err
 	}
+	
+	defer fasthttp.ReleaseRequest(req)
+	defer fasthttp.ReleaseResponse(resp)
 
 	statusCode := resp.StatusCode()
 
