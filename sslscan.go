@@ -19,6 +19,9 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+// VERSION is current package version
+const VERSION = "13.1.3"
+
 const (
 	API_URL_INFO     = "https://api.ssllabs.com/api/v3/info"
 	API_URL_ANALYZE  = "https://api.ssllabs.com/api/v3/analyze"
@@ -147,9 +150,6 @@ const (
 	PROTOCOL_TLS12 = 771
 	PROTOCOL_TLS13 = 772
 )
-
-// VERSION is current package version
-const VERSION = "13.1.1"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
