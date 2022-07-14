@@ -107,17 +107,13 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(info.Status, check.Equals, "READY")
 	c.Assert(info.Endpoints, check.Not(check.HasLen), 0)
 
-	endpoint := getEndpointByIP(info.Endpoints, "192.30.255.113")
-
-	c.Assert(endpoint.IPAdress, check.Equals, "192.30.255.113")
-	c.Assert(endpoint.ServerName, check.Equals, "lb-192-30-255-113-sea.github.com")
-	c.Assert(endpoint.Grade, check.Equals, "A+")
-	c.Assert(endpoint.GradeTrustIgnored, check.Equals, "A+")
-	c.Assert(endpoint.HasWarnings, check.Equals, false)
-	c.Assert(endpoint.IsExceptional, check.Equals, true)
-	c.Assert(endpoint.Progress, check.Equals, 100)
-	c.Assert(endpoint.Delegation, check.Equals, 1)
-	c.Assert(endpoint.Details, check.IsNil)
+	c.Assert(info.Endpoints[0].Grade, check.Equals, "A+")
+	c.Assert(info.Endpoints[0].GradeTrustIgnored, check.Equals, "A+")
+	c.Assert(info.Endpoints[0].HasWarnings, check.Equals, false)
+	c.Assert(info.Endpoints[0].IsExceptional, check.Equals, true)
+	c.Assert(info.Endpoints[0].Progress, check.Equals, 100)
+	c.Assert(info.Endpoints[0].Delegation, check.Equals, 1)
+	c.Assert(info.Endpoints[0].Details, check.IsNil)
 
 	fullInfo, err := progress.Info(true, true)
 
@@ -322,13 +318,3 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
-
-func getEndpointByIP(enpoints []*EndpointInfo, ip string) *EndpointInfo {
-	for _, endpoint := range enpoints {
-		if endpoint.IPAdress == ip {
-			return endpoint
-		}
-	}
-
-	return nil
-}
