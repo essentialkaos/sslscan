@@ -20,7 +20,7 @@ import (
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // VERSION is current package version
-const VERSION = "13.1.4"
+const VERSION = "13.1.5"
 
 const (
 	API_URL_INFO     = "https://api.ssllabs.com/api/v3/info"
