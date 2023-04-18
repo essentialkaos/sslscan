@@ -205,7 +205,7 @@ type AnalyzeInfo struct {
 }
 
 type EndpointInfo struct {
-	IPAdress             string           `json:"ipAddress"`            // endpoint IP address, in IPv4 or IPv6 format
+	IPAddress             string           `json:"ipAddress"`            // endpoint IP address, in IPv4 or IPv6 format
 	ServerName           string           `json:"serverName"`           // server name retrieved via reverse DNS
 	StatusMessage        string           `json:"statusMessage"`        // assessment status message
 	StatusDetails        string           `json:"statusDetails"`        // code of the operation currently in progress
