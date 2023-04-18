@@ -19,9 +19,6 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// VERSION is current package version
-const VERSION = "13.1.5"
-
 const (
 	API_URL_INFO     = "https://api.ssllabs.com/api/v3/info"
 	API_URL_ANALYZE  = "https://api.ssllabs.com/api/v3/analyze"
@@ -205,7 +202,7 @@ type AnalyzeInfo struct {
 }
 
 type EndpointInfo struct {
-	IPAdress             string           `json:"ipAddress"`            // endpoint IP address, in IPv4 or IPv6 format
+	IPAddress            string           `json:"ipAddress"`            // endpoint IP address, in IPv4 or IPv6 format
 	ServerName           string           `json:"serverName"`           // server name retrieved via reverse DNS
 	StatusMessage        string           `json:"statusMessage"`        // assessment status message
 	StatusDetails        string           `json:"statusDetails"`        // code of the operation currently in progress
@@ -736,15 +733,15 @@ func formatBoolParam(v bool) string {
 func getUserAgent(app, version string) string {
 	if app != "" && version != "" {
 		return fmt.Sprintf(
-			"%s/%s SSLScan/%s (go; %s; %s-%s)",
-			app, version, VERSION, runtime.Version(),
+			"%s/%s SSLScan/13 (go; %s; %s-%s)",
+			app, version, runtime.Version(),
 			runtime.GOARCH, runtime.GOOS,
 		)
 	}
 
 	return fmt.Sprintf(
-		"SSLScan/%s (go; %s; %s-%s)",
-		VERSION, runtime.Version(),
+		"SSLScan/13 (go; %s; %s-%s)",
+		runtime.Version(),
 		runtime.GOARCH, runtime.GOOS,
 	)
 }
