@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://kaos.sh/g/sslscan.v13"><img src="https://gh.kaos.st/godoc.svg" alt="PkgGoDev" /></a>
-  <a href="https://kaos.sh/r/sslscan"><img src="https://kaos.sh/r/sslscan.svg" alt="GoReportCard" /></a>
+  <a href="https://kaos.sh/l/sslscan"><img src="https://kaos.sh/l/35f63606e26d8588f906.svg" alt="Code Climate Maintainability" /></a>
   <a href="https://kaos.sh/b/sslscan"><img src="https://kaos.sh/b/59a17b0e-b974-425e-a442-b9bcc3ccf7c0.svg" alt="Codebeat badge" /></a>
   <a href="https://kaos.sh/w/sslscan/ci"><img src="https://kaos.sh/w/sslscan/ci.svg" alt="GitHub Actions CI Status" /></a>
   <a href="https://kaos.sh/w/sslscan/codeql"><img src="https://kaos.sh/w/sslscan/codeql.svg" alt="GitHub Actions CodeQL Status" /></a>
