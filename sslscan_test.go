@@ -9,6 +9,7 @@ package sslscan
 
 import (
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -85,12 +86,16 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	lastSuccess := time.Now()
 
 	for {
-		progress, err = api.Analyze("github.com", AnalyzeParams{})
+		if os.Getenv("NO_CACHE") != "" {
+			progress, err = api.Analyze("github.com", AnalyzeParams{StartNew: true})
+		} else {
+			progress, err = api.Analyze("github.com", AnalyzeParams{})
+		}
 
 		if err != nil {
 			fmt.Printf("Error: %v (%.0f sec since test start)\n", err, time.Since(lastSuccess).Seconds())
 			if time.Since(lastSuccess) > 3*time.Minute {
-				c.Fatal("Can't ")
+				c.Fatal("Can't start test for 3 minutes, exiting…")
 			}
 			time.Sleep(30 * time.Second)
 		} else {
