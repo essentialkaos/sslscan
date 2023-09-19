@@ -9,6 +9,7 @@ package sslscan
 
 import (
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -17,7 +18,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "10.0.2"
+const _TESTER_VERSION = "10.0.3"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -68,7 +69,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "2.1.10")
+	c.Assert(api.Info.EngineVersion, check.Equals, "2.2.0")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009q")
 }
 
@@ -85,12 +86,16 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	lastSuccess := time.Now()
 
 	for {
-		progress, err = api.Analyze("github.com", AnalyzeParams{})
+		if os.Getenv("NO_CACHE") != "" {
+			progress, err = api.Analyze("github.com", AnalyzeParams{StartNew: true})
+		} else {
+			progress, err = api.Analyze("github.com", AnalyzeParams{})
+		}
 
 		if err != nil {
 			fmt.Printf("Error: %v (%.0f sec since test start)\n", err, time.Since(lastSuccess).Seconds())
 			if time.Since(lastSuccess) > 3*time.Minute {
-				c.Fatal("Can't ")
+				c.Fatal("Can't start test for 3 minutes, exiting…")
 			}
 			time.Sleep(30 * time.Second)
 		} else {
@@ -297,7 +302,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.HSTSPreloads[2].SourceTime, check.Not(check.Equals), 0)
 	c.Assert(details.HPKPPolicy.Status, check.Equals, HPKP_STATUS_ABSENT)
 	c.Assert(details.HPKPRoPolicy.Status, check.Equals, HPKP_STATUS_ABSENT)
-	c.Assert(details.StaticPKPPolicy.Status, check.Equals, SPKP_STATUS_UNKNOWN)
+	c.Assert(details.StaticPKPPolicy.Status, check.Equals, SPKP_STATUS_ABSENT)
 	c.Assert(details.HTTPTransactions, check.Not(check.HasLen), 0)
 	c.Assert(details.HTTPTransactions[0].RequestURL, check.Equals, "https://github.com/")
 	c.Assert(details.HTTPTransactions[0].StatusCode, check.Equals, 200)
