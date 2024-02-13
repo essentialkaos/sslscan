@@ -18,7 +18,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "10.0.3"
+const _TESTER_VERSION = "10.0.4"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -64,9 +64,12 @@ func (s *SSLLabsSuite) TestErrors(c *check.C) {
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
 	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
 
+	if err != nil {
+		c.Fatal(err.Error())
+	}
+
 	api.RequestTimeout = 5 * time.Second
 
-	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
 	c.Assert(api.Info.EngineVersion, check.Equals, "2.2.0")
@@ -78,9 +81,12 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
 
+	if err != nil {
+		c.Fatal(err.Error())
+	}
+
 	api.RequestTimeout = 5 * time.Second
 
-	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
 	lastSuccess := time.Now()
