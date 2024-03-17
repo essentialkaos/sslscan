@@ -18,7 +18,7 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "10.0.4"
+const _TESTER_VERSION = "10.0.5"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -72,7 +72,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 
 	c.Assert(api, check.NotNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "2.2.0")
+	c.Assert(api.Info.EngineVersion, check.Equals, "2.3.0")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009q")
 }
 
@@ -229,7 +229,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.SIMS.Results[5].NamedGroupName, check.Equals, "secp256r1")
 	c.Assert(details.SIMS.Results[5].KeyAlg, check.Equals, "EC")
 	c.Assert(details.SIMS.Results[5].KeySize, check.Equals, 256)
-	c.Assert(details.SIMS.Results[5].SigAlg, check.Equals, "SHA384withECDSA")
+	c.Assert(details.SIMS.Results[5].SigAlg, check.Equals, "SHA256withECDSA")
 	c.Assert(details.SIMS.Results[16].Client, check.NotNil)
 	c.Assert(details.SIMS.Results[16].Client.ID, check.Equals, 153)
 	c.Assert(details.SIMS.Results[16].Client.Name, check.Equals, "Chrome")
@@ -323,7 +323,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	certs := fullInfo.Certs
 
-	c.Assert(certs, check.HasLen, 6)
+	c.Assert(certs, check.HasLen, 8)
 	c.Assert(certs[0].ID, check.Equals, "477022360c3af6ba9838cfb2d68f79768c95902946c0117bdd0220b167e7b625")
 	c.Assert(certs[0].Subject, check.Not(check.Equals), "")
 	c.Assert(certs[0].SerialNumber, check.Equals, "036d5f0006fefee0b122f4e25eeca25c")
