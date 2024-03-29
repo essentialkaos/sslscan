@@ -3,26 +3,24 @@ package sslscan
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2022 ESSENTIAL KAOS                         //
-//      Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>      //
+//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
+//      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 import (
-	"encoding/json"
 	"fmt"
-	"runtime"
 	"time"
 
-	"github.com/valyala/fasthttp"
+	"github.com/essentialkaos/ek/v12/req"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 const (
-	API_URL_INFO     = "https://api.ssllabs.com/api/v3/info"
-	API_URL_ANALYZE  = "https://api.ssllabs.com/api/v3/analyze"
-	API_URL_DETAILED = "https://api.ssllabs.com/api/v3/getEndpointData"
+	API_URL_INFO     = "https://api.ssllabs.com/api/v4/info"
+	API_URL_ANALYZE  = "https://api.ssllabs.com/api/v4/analyze"
+	API_URL_DETAILED = "https://api.ssllabs.com/api/v4/getEndpointData"
 )
 
 const (
@@ -151,9 +149,10 @@ const (
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 type API struct {
-	RequestTimeout time.Duration
-	Info           *Info
-	Client         *fasthttp.Client
+	Info   *Info
+	Engine *req.Engine
+
+	email string
 }
 
 type AnalyzeParams struct {
@@ -173,7 +172,14 @@ type AnalyzeProgress struct {
 	api *API
 }
 
-// DOCS: https://github.com/ssllabs/ssllabs-scan/blob/master/ssllabs-api-docs-v3.md
+// DOCS: https://github.com/ssllabs/ssllabs-scan/blob/master/ssllabs-api-docs-v4.md
+
+type RegisterRequest struct {
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	Email        string `json:"email"`
+	Organization string `json:"organization"`
+}
 
 type Info struct {
 	EngineVersion        string   `json:"engineVersion"`        // SSL Labs software version as a string (e.g., "1.11.14")
@@ -504,48 +510,47 @@ type HTTPHeader struct {
 	Value string `json:"value"`
 }
 
-// ////////////////////////////////////////////////////////////////////////////////// //
-
-type HTTPError struct {
-	StatusCode   int
-	ResponseData string
+type APIErrors struct {
+	Errors []*APIError `json:"errors"`
 }
 
-func (e *HTTPError) Error() string {
-	return fmt.Sprintf("API returned HTTP code %d", e.StatusCode)
+type APIError struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
-
-// RequestTimeout is default request timeout
-var RequestTimeout = 10 * time.Second
 
 var (
 	ErrEmptyClientName    = fmt.Errorf("Client name can't be empty")
 	ErrEmptyClientVersion = fmt.Errorf("Client version can't be empty")
+	ErrEmptyEmail         = fmt.Errorf("Email can't be empty")
 	ErrNilStruct          = fmt.Errorf("Struct is nil")
 	ErrNotInitialized     = fmt.Errorf("Struct is not initialized")
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// NewAPI create new api struct
-func NewAPI(name, version string) (*API, error) {
+// NewAPI creates new API instance
+func NewAPI(name, version, email string) (*API, error) {
 	switch {
 	case name == "":
 		return nil, ErrEmptyClientName
 	case version == "":
 		return nil, ErrEmptyClientVersion
+	case email == "":
+		return nil, ErrEmptyEmail
 	}
 
 	api := &API{
-		RequestTimeout: RequestTimeout,
-		Client: &fasthttp.Client{
-			Name:                getUserAgent(name, version),
-			MaxIdleConnDuration: 5 * time.Second,
-			MaxConnsPerHost:     100,
-		},
+		Engine: &req.Engine{},
+		email:  email,
 	}
+
+	api.Engine.Init()
+	api.Engine.SetUserAgent(name, version, "SSLScan/14")
+
+	api.Engine.Client.Timeout = 10 * time.Second
 
 	info := &Info{}
 	err := api.doRequest(API_URL_INFO, info)
@@ -660,41 +665,50 @@ func (ap *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*Endpoint
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// doRequest sends request through http client
-func (api *API) doRequest(uri string, result interface{}) error {
-	var err error
-
-	req := fasthttp.AcquireRequest()
-	resp := fasthttp.AcquireResponse()
-
-	req.SetRequestURI(uri)
-
-	defer fasthttp.ReleaseRequest(req)
-	defer fasthttp.ReleaseResponse(resp)
-
-	if api.RequestTimeout == 0 {
-		err = api.Client.Do(req, resp)
-	} else {
-		err = api.Client.DoTimeout(req, resp, api.RequestTimeout)
+// ToError converts API errors object into error
+func (e *APIErrors) ToError() error {
+	for _, err := range e.Errors {
+		return fmt.Errorf("[%s] %s", err.Field, err.Message)
 	}
+
+	return nil
+}
+
+// ////////////////////////////////////////////////////////////////////////////////// //
+
+// doRequest sends request using http client
+func (api *API) doRequest(uri string, result any) error {
+	resp, err := api.Engine.Get(
+		req.Request{
+			URL: uri,
+			Headers: req.Headers{
+				"email": api.email,
+			},
+		},
+	)
+
+	defer resp.Discard()
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Can't send request to API: %w", err)
 	}
 
-	statusCode := resp.StatusCode()
+	if resp.StatusCode != 200 {
+		errs := &APIErrors{}
+		err = resp.JSON(errs)
 
-	if statusCode != 200 {
-		return &HTTPError{StatusCode: statusCode, ResponseData: resp.String()}
+		if err != nil {
+			return fmt.Errorf("Can't decode error response: %w", err)
+		}
+
+		return errs.ToError()
 	}
 
 	if result == nil {
 		return nil
 	}
 
-	err = json.Unmarshal(resp.Body(), result)
-
-	return err
+	return resp.JSON(result)
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -727,21 +741,4 @@ func formatBoolParam(v bool) string {
 	}
 
 	return "on"
-}
-
-// getUserAgent generate user-agent string for client
-func getUserAgent(app, version string) string {
-	if app != "" && version != "" {
-		return fmt.Sprintf(
-			"%s/%s SSLScan/13 (go; %s; %s-%s)",
-			app, version, runtime.Version(),
-			runtime.GOARCH, runtime.GOOS,
-		)
-	}
-
-	return fmt.Sprintf(
-		"SSLScan/13 (go; %s; %s-%s)",
-		runtime.Version(),
-		runtime.GOARCH, runtime.GOOS,
-	)
 }

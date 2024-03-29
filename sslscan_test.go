@@ -2,8 +2,8 @@ package sslscan
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2022 ESSENTIAL KAOS                         //
-//      Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>      //
+//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
+//      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -18,7 +18,10 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "10.0.5"
+const (
+	_TESTER_VERSION = "11.0.0"
+	_TESTER_EMAIL   = "jdoe@someoraganizationemail.com"
+)
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -33,9 +36,9 @@ var _ = check.Suite(&SSLLabsSuite{})
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 func (s *SSLLabsSuite) TestErrors(c *check.C) {
-	_, err := NewAPI("", _TESTER_VERSION)
+	_, err := NewAPI("", _TESTER_VERSION, _TESTER_EMAIL)
 	c.Assert(err, check.Equals, ErrEmptyClientName)
-	_, err = NewAPI("SSLScanTester", "")
+	_, err = NewAPI("SSLScanTester", "", _TESTER_EMAIL)
 	c.Assert(err, check.Equals, ErrEmptyClientVersion)
 
 	var api *API
@@ -62,13 +65,11 @@ func (s *SSLLabsSuite) TestErrors(c *check.C) {
 }
 
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
-	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
+	api, err := NewAPI("SSLScanTester", _TESTER_VERSION, _TESTER_EMAIL)
 
 	if err != nil {
 		c.Fatal(err.Error())
 	}
-
-	api.RequestTimeout = 5 * time.Second
 
 	c.Assert(api, check.NotNil)
 
@@ -79,13 +80,11 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	var progress *AnalyzeProgress
 
-	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
+	api, err := NewAPI("SSLScanTester", _TESTER_VERSION, _TESTER_EMAIL)
 
 	if err != nil {
 		c.Fatal(err.Error())
 	}
-
-	api.RequestTimeout = 5 * time.Second
 
 	c.Assert(api, check.NotNil)
 
