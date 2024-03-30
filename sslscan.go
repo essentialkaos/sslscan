@@ -525,8 +525,7 @@ var (
 	ErrEmptyClientName    = fmt.Errorf("Client name can't be empty")
 	ErrEmptyClientVersion = fmt.Errorf("Client version can't be empty")
 	ErrEmptyEmail         = fmt.Errorf("Email can't be empty")
-	ErrNilStruct          = fmt.Errorf("Struct is nil")
-	ErrNotInitialized     = fmt.Errorf("Struct is not initialized")
+	ErrInvalid            = fmt.Errorf("Object is nil or not properly initialized")
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -566,17 +565,16 @@ func NewAPI(name, version, email string) (*API, error) {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// Analyze start check for host
-func (api *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, error) {
-	if api == nil {
-		return nil, ErrNilStruct
+// Analyze starts check for host
+func (a *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, error) {
+	if a == nil {
+		return nil, ErrInvalid
 	}
 
-	progress := &AnalyzeProgress{host: host, api: api, maxAge: params.MaxAge}
-	query := "host=" + host
-	query += paramsToQuery(params)
+	progress := &AnalyzeProgress{host: host, api: a, maxAge: params.MaxAge}
+	query := "host=" + host + params.ToQuery()
 
-	err := api.doRequest(API_URL_ANALYZE+"?"+query, nil)
+	err := a.doRequest(API_URL_ANALYZE+"?"+query, nil)
 
 	if err != nil {
 		return nil, err
@@ -585,16 +583,13 @@ func (api *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, er
 	return progress, nil
 }
 
-// Info return short info
-func (ap *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) {
-	switch {
-	case ap == nil:
-		return nil, ErrNilStruct
-	case ap.api == nil, ap.host == "":
-		return nil, ErrNotInitialized
+// Info returns info about check
+func (p *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) {
+	if p == nil || p.api == nil || p.host == "" {
+		return nil, ErrInvalid
 	}
 
-	query := "host=" + ap.host
+	query := "host=" + p.host
 
 	if detailed {
 		query += "&all=on"
@@ -603,58 +598,55 @@ func (ap *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) 
 	if fromCache {
 		query += "&fromCache=" + formatBoolParam(fromCache)
 
-		if ap.maxAge > 0 {
-			query += "&maxAge=" + fmt.Sprintf("%d", ap.maxAge)
+		if p.maxAge > 0 {
+			query += "&maxAge=" + fmt.Sprintf("%d", p.maxAge)
 		}
 	}
 
 	info := &AnalyzeInfo{}
-	err := ap.api.doRequest(API_URL_ANALYZE+"?"+query, info)
+	err := p.api.doRequest(API_URL_ANALYZE+"?"+query, info)
 
 	if err != nil {
 		return nil, err
 	}
 
-	ap.prevStatus = info.Status
+	p.prevStatus = info.Status
 
 	return info, nil
 }
 
 // GetEndpointInfo returns detailed endpoint info
-func (ap *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*EndpointInfo, error) {
-	switch {
-	case ap == nil:
-		return nil, ErrNilStruct
-	case ap.api == nil, ap.host == "":
-		return nil, ErrNotInitialized
+func (p *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*EndpointInfo, error) {
+	if p == nil || p.api == nil || p.host == "" {
+		return nil, ErrInvalid
 	}
 
 	var err error
 
-	if ap.prevStatus != STATUS_READY {
-		_, err = ap.Info(false, false)
+	if p.prevStatus != STATUS_READY {
+		_, err = p.Info(false, false)
 
 		if err != nil {
 			return nil, err
 		}
 
-		if ap.prevStatus != STATUS_READY {
+		if p.prevStatus != STATUS_READY {
 			return nil, fmt.Errorf("Retrieving detailed information possible only with status READY")
 		}
 	}
 
-	query := "host=" + ap.host + "&s=" + ip
+	query := "host=" + p.host + "&s=" + ip
 
 	if fromCache {
 		query += "&fromCache=" + formatBoolParam(fromCache)
 
-		if ap.maxAge > 0 {
-			query += "&maxAge=" + fmt.Sprintf("%d", ap.maxAge)
+		if p.maxAge > 0 {
+			query += "&maxAge=" + fmt.Sprintf("%d", p.maxAge)
 		}
 	}
 
 	info := &EndpointInfo{}
-	err = ap.api.doRequest(API_URL_DETAILED+"?"+query, info)
+	err = p.api.doRequest(API_URL_DETAILED+"?"+query, info)
 
 	if err != nil {
 		return nil, err
@@ -674,15 +666,36 @@ func (e *APIErrors) ToError() error {
 	return nil
 }
 
+// String combines params into query
+func (p AnalyzeParams) ToQuery() string {
+	var result string
+
+	result += "publish=" + formatBoolParam(p.Public) + "&"
+	result += "startNew=" + formatBoolParam(p.StartNew) + "&"
+	result += "fromCache=" + formatBoolParam(p.FromCache) + "&"
+
+	if p.MaxAge != 0 {
+		result += "maxAge=" + fmt.Sprintf("%d", p.MaxAge) + "&"
+	}
+
+	result += "ignoreMismatch=" + formatBoolParam(p.IgnoreMismatch)
+
+	if len(result) != 0 {
+		return "&" + result
+	}
+
+	return ""
+}
+
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // doRequest sends request using http client
-func (api *API) doRequest(uri string, result any) error {
-	resp, err := api.Engine.Get(
+func (a *API) doRequest(uri string, result any) error {
+	resp, err := a.Engine.Get(
 		req.Request{
 			URL: uri,
 			Headers: req.Headers{
-				"email": api.email,
+				"email": a.email,
 			},
 		},
 	)
@@ -712,27 +725,6 @@ func (api *API) doRequest(uri string, result any) error {
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
-
-// paramsToQuery is a lightweight query encoder
-func paramsToQuery(params AnalyzeParams) string {
-	var result string
-
-	result += "publish=" + formatBoolParam(params.Public) + "&"
-	result += "startNew=" + formatBoolParam(params.StartNew) + "&"
-	result += "fromCache=" + formatBoolParam(params.FromCache) + "&"
-
-	if params.MaxAge != 0 {
-		result += "maxAge=" + fmt.Sprintf("%d", params.MaxAge) + "&"
-	}
-
-	result += "ignoreMismatch=" + formatBoolParam(params.IgnoreMismatch)
-
-	if len(result) != 0 {
-		return "&" + result
-	}
-
-	return ""
-}
 
 // formatBoolParam formats boolean parameter
 func formatBoolParam(v bool) string {

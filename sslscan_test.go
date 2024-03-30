@@ -43,25 +43,25 @@ func (s *SSLLabsSuite) TestErrors(c *check.C) {
 
 	var api *API
 	_, err = api.Analyze("test.com", AnalyzeParams{})
-	c.Assert(err, check.Equals, ErrNilStruct)
+	c.Assert(err, check.Equals, ErrInvalid)
 
 	var ap *AnalyzeProgress
 	_, err = ap.Info(false, false)
-	c.Assert(err, check.Equals, ErrNilStruct)
+	c.Assert(err, check.Equals, ErrInvalid)
 	_, err = ap.GetEndpointInfo("0.0.0.0", false)
-	c.Assert(err, check.Equals, ErrNilStruct)
+	c.Assert(err, check.Equals, ErrInvalid)
 
 	ap = &AnalyzeProgress{}
 	_, err = ap.Info(false, false)
-	c.Assert(err, check.Equals, ErrNotInitialized)
+	c.Assert(err, check.Equals, ErrInvalid)
 	_, err = ap.GetEndpointInfo("0.0.0.0", false)
-	c.Assert(err, check.Equals, ErrNotInitialized)
+	c.Assert(err, check.Equals, ErrInvalid)
 
 	ap.api = &API{}
 	_, err = ap.Info(false, false)
-	c.Assert(err, check.Equals, ErrNotInitialized)
+	c.Assert(err, check.Equals, ErrInvalid)
 	_, err = ap.GetEndpointInfo("0.0.0.0", false)
-	c.Assert(err, check.Equals, ErrNotInitialized)
+	c.Assert(err, check.Equals, ErrInvalid)
 }
 
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
