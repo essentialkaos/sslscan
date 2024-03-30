@@ -2,8 +2,8 @@ package sslscan
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2022 ESSENTIAL KAOS                         //
-//      Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>      //
+//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
+//      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -18,7 +18,10 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-const _TESTER_VERSION = "10.0.3"
+const (
+	_TESTER_VERSION = "11.0.0"
+	_TESTER_EMAIL   = "jdoe@someoraganizationemail.com"
+)
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -33,54 +36,56 @@ var _ = check.Suite(&SSLLabsSuite{})
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 func (s *SSLLabsSuite) TestErrors(c *check.C) {
-	_, err := NewAPI("", _TESTER_VERSION)
+	_, err := NewAPI("", _TESTER_VERSION, _TESTER_EMAIL)
 	c.Assert(err, check.Equals, ErrEmptyClientName)
-	_, err = NewAPI("SSLScanTester", "")
+	_, err = NewAPI("SSLScanTester", "", _TESTER_EMAIL)
 	c.Assert(err, check.Equals, ErrEmptyClientVersion)
 
 	var api *API
 	_, err = api.Analyze("test.com", AnalyzeParams{})
-	c.Assert(err, check.Equals, ErrNilStruct)
+	c.Assert(err, check.Equals, ErrInvalid)
 
 	var ap *AnalyzeProgress
 	_, err = ap.Info(false, false)
-	c.Assert(err, check.Equals, ErrNilStruct)
+	c.Assert(err, check.Equals, ErrInvalid)
 	_, err = ap.GetEndpointInfo("0.0.0.0", false)
-	c.Assert(err, check.Equals, ErrNilStruct)
+	c.Assert(err, check.Equals, ErrInvalid)
 
 	ap = &AnalyzeProgress{}
 	_, err = ap.Info(false, false)
-	c.Assert(err, check.Equals, ErrNotInitialized)
+	c.Assert(err, check.Equals, ErrInvalid)
 	_, err = ap.GetEndpointInfo("0.0.0.0", false)
-	c.Assert(err, check.Equals, ErrNotInitialized)
+	c.Assert(err, check.Equals, ErrInvalid)
 
 	ap.api = &API{}
 	_, err = ap.Info(false, false)
-	c.Assert(err, check.Equals, ErrNotInitialized)
+	c.Assert(err, check.Equals, ErrInvalid)
 	_, err = ap.GetEndpointInfo("0.0.0.0", false)
-	c.Assert(err, check.Equals, ErrNotInitialized)
+	c.Assert(err, check.Equals, ErrInvalid)
 }
 
 func (s *SSLLabsSuite) TestInfo(c *check.C) {
-	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
+	api, err := NewAPI("SSLScanTester", _TESTER_VERSION, _TESTER_EMAIL)
 
-	api.RequestTimeout = 5 * time.Second
+	if err != nil {
+		c.Fatal(err.Error())
+	}
 
-	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "2.2.0")
+	c.Assert(api.Info.EngineVersion, check.Equals, "2.3.0")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009q")
 }
 
 func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	var progress *AnalyzeProgress
 
-	api, err := NewAPI("SSLScanTester", _TESTER_VERSION)
+	api, err := NewAPI("SSLScanTester", _TESTER_VERSION, _TESTER_EMAIL)
 
-	api.RequestTimeout = 5 * time.Second
+	if err != nil {
+		c.Fatal(err.Error())
+	}
 
-	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 
 	lastSuccess := time.Now()
@@ -223,7 +228,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.SIMS.Results[5].NamedGroupName, check.Equals, "secp256r1")
 	c.Assert(details.SIMS.Results[5].KeyAlg, check.Equals, "EC")
 	c.Assert(details.SIMS.Results[5].KeySize, check.Equals, 256)
-	c.Assert(details.SIMS.Results[5].SigAlg, check.Equals, "SHA384withECDSA")
+	c.Assert(details.SIMS.Results[5].SigAlg, check.Equals, "SHA256withECDSA")
 	c.Assert(details.SIMS.Results[16].Client, check.NotNil)
 	c.Assert(details.SIMS.Results[16].Client.ID, check.Equals, 153)
 	c.Assert(details.SIMS.Results[16].Client.Name, check.Equals, "Chrome")
@@ -317,7 +322,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	certs := fullInfo.Certs
 
-	c.Assert(certs, check.HasLen, 6)
+	c.Assert(certs, check.HasLen, 8)
 	c.Assert(certs[0].ID, check.Equals, "477022360c3af6ba9838cfb2d68f79768c95902946c0117bdd0220b167e7b625")
 	c.Assert(certs[0].Subject, check.Not(check.Equals), "")
 	c.Assert(certs[0].SerialNumber, check.Equals, "036d5f0006fefee0b122f4e25eeca25c")

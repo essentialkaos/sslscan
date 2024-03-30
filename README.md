@@ -1,7 +1,7 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/sslscan.svg"/></a></p>
 
 <p align="center">
-  <a href="https://kaos.sh/g/sslscan.v13"><img src="https://gh.kaos.st/godoc.svg" alt="PkgGoDev" /></a>
+  <a href="https://kaos.sh/g/sslscan.v14"><img src="https://gh.kaos.st/godoc.svg" alt="PkgGoDev" /></a>
   <a href="https://kaos.sh/l/sslscan"><img src="https://kaos.sh/l/35f63606e26d8588f906.svg" alt="Code Climate Maintainability" /></a>
   <a href="https://kaos.sh/b/sslscan"><img src="https://kaos.sh/b/59a17b0e-b974-425e-a442-b9bcc3ccf7c0.svg" alt="Codebeat badge" /></a>
   <a href="https://kaos.sh/w/sslscan/ci"><img src="https://kaos.sh/w/sslscan/ci.svg" alt="GitHub Actions CI Status" /></a>
@@ -13,15 +13,7 @@
 
 <br/>
 
-Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API.
-
-### Installation
-
-To build the SSLScan from scratch, make sure you have a working Go 1.18+ workspace ([instructions](https://go.dev/doc/install)), then:
-
-```bash
-go get -u github.com/essentialkaos/sslscan/v13
-```
+Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API ([Version 4](https://github.com/ssllabs/ssllabs-scan/blob/master/ssllabs-api-docs-v4.md)).
 
 ### Build Status
 
@@ -36,7 +28,7 @@ Before contributing to this project please read our [Contributing Guidelines](ht
 
 ### Terms of Use
 
-This project is not affiliated with SSL Labs and not officially supported by SSL Labs. Before using this package please read [Qualys SSL Labs Terms of Use](https://www.ssllabs.com/downloads/Qualys_SSL_Labs_Terms_of_Use.pdf).
+This project IS NOT AFFILIATED with SSL Labs and not officially supported by SSL Labs. Before using this package please read [Qualys SSL Labs Terms of Use](https://www.ssllabs.com/downloads/Qualys_SSL_Labs_Terms_of_Use.pdf).
 
 Also you should:
 

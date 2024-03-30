@@ -3,26 +3,25 @@ package sslscan
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2022 ESSENTIAL KAOS                         //
-//      Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>      //
+//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
+//      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 import (
-	"encoding/json"
 	"fmt"
-	"runtime"
 	"time"
 
-	"github.com/valyala/fasthttp"
+	"github.com/essentialkaos/ek/v12/req"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 const (
-	API_URL_INFO     = "https://api.ssllabs.com/api/v3/info"
-	API_URL_ANALYZE  = "https://api.ssllabs.com/api/v3/analyze"
-	API_URL_DETAILED = "https://api.ssllabs.com/api/v3/getEndpointData"
+	API_URL_INFO     = "https://api.ssllabs.com/api/v4/info"
+	API_URL_REGISTER = "https://api.ssllabs.com/api/v4/register"
+	API_URL_ANALYZE  = "https://api.ssllabs.com/api/v4/analyze"
+	API_URL_DETAILED = "https://api.ssllabs.com/api/v4/getEndpointData"
 )
 
 const (
@@ -151,9 +150,10 @@ const (
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 type API struct {
-	RequestTimeout time.Duration
-	Info           *Info
-	Client         *fasthttp.Client
+	Info   *Info
+	Engine *req.Engine
+
+	email string
 }
 
 type AnalyzeParams struct {
@@ -173,7 +173,21 @@ type AnalyzeProgress struct {
 	api *API
 }
 
-// DOCS: https://github.com/ssllabs/ssllabs-scan/blob/master/ssllabs-api-docs-v3.md
+// ////////////////////////////////////////////////////////////////////////////////// //
+
+// DOCS: https://github.com/ssllabs/ssllabs-scan/blob/master/ssllabs-api-docs-v4.md
+
+type RegisterRequest struct {
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	Email        string `json:"email"`
+	Organization string `json:"organization"`
+}
+
+type RegisterResponse struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+}
 
 type Info struct {
 	EngineVersion        string   `json:"engineVersion"`        // SSL Labs software version as a string (e.g., "1.11.14")
@@ -504,51 +518,49 @@ type HTTPHeader struct {
 	Value string `json:"value"`
 }
 
-// ////////////////////////////////////////////////////////////////////////////////// //
-
-type HTTPError struct {
-	StatusCode   int
-	ResponseData string
+type APIErrors struct {
+	Errors []*APIError `json:"errors"`
 }
 
-func (e *HTTPError) Error() string {
-	return fmt.Sprintf("API returned HTTP code %d", e.StatusCode)
+type APIError struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
-
-// RequestTimeout is default request timeout
-var RequestTimeout = 10 * time.Second
 
 var (
 	ErrEmptyClientName    = fmt.Errorf("Client name can't be empty")
 	ErrEmptyClientVersion = fmt.Errorf("Client version can't be empty")
-	ErrNilStruct          = fmt.Errorf("Struct is nil")
-	ErrNotInitialized     = fmt.Errorf("Struct is not initialized")
+	ErrEmptyEmail         = fmt.Errorf("Email can't be empty")
+	ErrInvalid            = fmt.Errorf("Object is nil or not properly initialized")
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// NewAPI create new api struct
-func NewAPI(name, version string) (*API, error) {
+// NewAPI creates new API instance
+func NewAPI(name, version, email string) (*API, error) {
 	switch {
 	case name == "":
 		return nil, ErrEmptyClientName
 	case version == "":
 		return nil, ErrEmptyClientVersion
+	case email == "":
+		return nil, ErrEmptyEmail
 	}
 
 	api := &API{
-		RequestTimeout: RequestTimeout,
-		Client: &fasthttp.Client{
-			Name:                getUserAgent(name, version),
-			MaxIdleConnDuration: 5 * time.Second,
-			MaxConnsPerHost:     100,
-		},
+		Engine: &req.Engine{},
+		email:  email,
 	}
 
+	api.Engine.Init()
+	api.Engine.SetUserAgent(name, version, "SSLScan/14")
+
+	api.Engine.Client.Timeout = 10 * time.Second
+
 	info := &Info{}
-	err := api.doRequest(API_URL_INFO, info)
+	err := api.doRequest(API_URL_INFO, nil, info)
 
 	if err != nil {
 		return nil, err
@@ -561,17 +573,39 @@ func NewAPI(name, version string) (*API, error) {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// Analyze start check for host
-func (api *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, error) {
-	if api == nil {
-		return nil, ErrNilStruct
+// Register sends registration request with given data
+func (a *API) Register(reg *RegisterRequest) (*RegisterResponse, error) {
+	switch {
+	case a == nil:
+		return nil, ErrInvalid
+	case reg == nil:
+		return nil, fmt.Errorf("Register request invalid: request is nil")
+	case reg.FirstName == "":
+		return nil, fmt.Errorf("Register request invalid: first name is empty")
+	case reg.LastName == "":
+		return nil, fmt.Errorf("Register request invalid: last name is empty")
+	case reg.Email == "":
+		return nil, fmt.Errorf("Register request invalid: email is empty")
+	case reg.Organization == "":
+		return nil, fmt.Errorf("Register request invalid: organization is empty")
 	}
 
-	progress := &AnalyzeProgress{host: host, api: api, maxAge: params.MaxAge}
-	query := "host=" + host
-	query += paramsToQuery(params)
+	response := &RegisterResponse{}
+	err := a.doRequest(API_URL_REGISTER, reg, response)
 
-	err := api.doRequest(API_URL_ANALYZE+"?"+query, nil)
+	return response, err
+}
+
+// Analyze starts check for host
+func (a *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, error) {
+	if a == nil {
+		return nil, ErrInvalid
+	}
+
+	progress := &AnalyzeProgress{host: host, api: a, maxAge: params.MaxAge}
+	query := "host=" + host + params.ToQuery()
+
+	err := a.doRequest(API_URL_ANALYZE+"?"+query, nil, nil)
 
 	if err != nil {
 		return nil, err
@@ -580,16 +614,13 @@ func (api *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, er
 	return progress, nil
 }
 
-// Info return short info
-func (ap *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) {
-	switch {
-	case ap == nil:
-		return nil, ErrNilStruct
-	case ap.api == nil, ap.host == "":
-		return nil, ErrNotInitialized
+// Info returns info about check
+func (p *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) {
+	if p == nil || p.api == nil || p.host == "" {
+		return nil, ErrInvalid
 	}
 
-	query := "host=" + ap.host
+	query := "host=" + p.host
 
 	if detailed {
 		query += "&all=on"
@@ -598,58 +629,55 @@ func (ap *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) 
 	if fromCache {
 		query += "&fromCache=" + formatBoolParam(fromCache)
 
-		if ap.maxAge > 0 {
-			query += "&maxAge=" + fmt.Sprintf("%d", ap.maxAge)
+		if p.maxAge > 0 {
+			query += "&maxAge=" + fmt.Sprintf("%d", p.maxAge)
 		}
 	}
 
 	info := &AnalyzeInfo{}
-	err := ap.api.doRequest(API_URL_ANALYZE+"?"+query, info)
+	err := p.api.doRequest(API_URL_ANALYZE+"?"+query, nil, info)
 
 	if err != nil {
 		return nil, err
 	}
 
-	ap.prevStatus = info.Status
+	p.prevStatus = info.Status
 
 	return info, nil
 }
 
 // GetEndpointInfo returns detailed endpoint info
-func (ap *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*EndpointInfo, error) {
-	switch {
-	case ap == nil:
-		return nil, ErrNilStruct
-	case ap.api == nil, ap.host == "":
-		return nil, ErrNotInitialized
+func (p *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*EndpointInfo, error) {
+	if p == nil || p.api == nil || p.host == "" {
+		return nil, ErrInvalid
 	}
 
 	var err error
 
-	if ap.prevStatus != STATUS_READY {
-		_, err = ap.Info(false, false)
+	if p.prevStatus != STATUS_READY {
+		_, err = p.Info(false, false)
 
 		if err != nil {
 			return nil, err
 		}
 
-		if ap.prevStatus != STATUS_READY {
+		if p.prevStatus != STATUS_READY {
 			return nil, fmt.Errorf("Retrieving detailed information possible only with status READY")
 		}
 	}
 
-	query := "host=" + ap.host + "&s=" + ip
+	query := "host=" + p.host + "&s=" + ip
 
 	if fromCache {
 		query += "&fromCache=" + formatBoolParam(fromCache)
 
-		if ap.maxAge > 0 {
-			query += "&maxAge=" + fmt.Sprintf("%d", ap.maxAge)
+		if p.maxAge > 0 {
+			query += "&maxAge=" + fmt.Sprintf("%d", p.maxAge)
 		}
 	}
 
 	info := &EndpointInfo{}
-	err = ap.api.doRequest(API_URL_DETAILED+"?"+query, info)
+	err = p.api.doRequest(API_URL_DETAILED+"?"+query, nil, info)
 
 	if err != nil {
 		return nil, err
@@ -660,58 +688,30 @@ func (ap *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*Endpoint
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// doRequest sends request through http client
-func (api *API) doRequest(uri string, result interface{}) error {
-	var err error
-
-	req := fasthttp.AcquireRequest()
-	resp := fasthttp.AcquireResponse()
-
-	req.SetRequestURI(uri)
-
-	defer fasthttp.ReleaseRequest(req)
-	defer fasthttp.ReleaseResponse(resp)
-
-	if api.RequestTimeout == 0 {
-		err = api.Client.Do(req, resp)
-	} else {
-		err = api.Client.DoTimeout(req, resp, api.RequestTimeout)
+// ToError converts API errors object into error
+func (e *APIErrors) ToError() error {
+	for _, err := range e.Errors {
+		return fmt.Errorf("%s", err.Message)
 	}
 
-	if err != nil {
-		return err
-	}
-
-	statusCode := resp.StatusCode()
-
-	if statusCode != 200 {
-		return &HTTPError{StatusCode: statusCode, ResponseData: resp.String()}
-	}
-
-	if result == nil {
-		return nil
-	}
-
-	err = json.Unmarshal(resp.Body(), result)
-
-	return err
+	return nil
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// paramsToQuery is a lightweight query encoder
-func paramsToQuery(params AnalyzeParams) string {
+// String combines params into query
+func (p AnalyzeParams) ToQuery() string {
 	var result string
 
-	result += "publish=" + formatBoolParam(params.Public) + "&"
-	result += "startNew=" + formatBoolParam(params.StartNew) + "&"
-	result += "fromCache=" + formatBoolParam(params.FromCache) + "&"
+	result += "publish=" + formatBoolParam(p.Public) + "&"
+	result += "startNew=" + formatBoolParam(p.StartNew) + "&"
+	result += "fromCache=" + formatBoolParam(p.FromCache) + "&"
 
-	if params.MaxAge != 0 {
-		result += "maxAge=" + fmt.Sprintf("%d", params.MaxAge) + "&"
+	if p.MaxAge != 0 {
+		result += "maxAge=" + fmt.Sprintf("%d", p.MaxAge) + "&"
 	}
 
-	result += "ignoreMismatch=" + formatBoolParam(params.IgnoreMismatch)
+	result += "ignoreMismatch=" + formatBoolParam(p.IgnoreMismatch)
 
 	if len(result) != 0 {
 		return "&" + result
@@ -720,6 +720,50 @@ func paramsToQuery(params AnalyzeParams) string {
 	return ""
 }
 
+// ////////////////////////////////////////////////////////////////////////////////// //
+
+// doRequest sends request using http client
+func (a *API) doRequest(uri string, request, response any) error {
+	r := req.Request{
+		Method:  req.GET,
+		URL:     uri,
+		Headers: req.Headers{"email": a.email},
+	}
+
+	if request != nil {
+		r.Method = req.POST
+		r.ContentType = req.CONTENT_TYPE_JSON
+		r.Body = request
+	}
+
+	resp, err := a.Engine.Do(r)
+
+	defer resp.Discard()
+
+	if err != nil {
+		return fmt.Errorf("Can't send request to API: %w", err)
+	}
+
+	if resp.StatusCode != 200 {
+		errs := &APIErrors{}
+		err = resp.JSON(errs)
+
+		if err != nil {
+			return fmt.Errorf("Can't decode error response: %w", err)
+		}
+
+		return errs.ToError()
+	}
+
+	if response == nil {
+		return nil
+	}
+
+	return resp.JSON(response)
+}
+
+// ////////////////////////////////////////////////////////////////////////////////// //
+
 // formatBoolParam formats boolean parameter
 func formatBoolParam(v bool) string {
 	if v == false {
@@ -727,21 +771,4 @@ func formatBoolParam(v bool) string {
 	}
 
 	return "on"
-}
-
-// getUserAgent generate user-agent string for client
-func getUserAgent(app, version string) string {
-	if app != "" && version != "" {
-		return fmt.Sprintf(
-			"%s/%s SSLScan/13 (go; %s; %s-%s)",
-			app, version, runtime.Version(),
-			runtime.GOARCH, runtime.GOOS,
-		)
-	}
-
-	return fmt.Sprintf(
-		"SSLScan/13 (go; %s; %s-%s)",
-		runtime.Version(),
-		runtime.GOARCH, runtime.GOOS,
-	)
 }
