@@ -19,6 +19,7 @@ import (
 
 const (
 	API_URL_INFO     = "https://api.ssllabs.com/api/v4/info"
+	API_URL_REGISTER = "https://api.ssllabs.com/api/v4/register"
 	API_URL_ANALYZE  = "https://api.ssllabs.com/api/v4/analyze"
 	API_URL_DETAILED = "https://api.ssllabs.com/api/v4/getEndpointData"
 )
@@ -172,6 +173,8 @@ type AnalyzeProgress struct {
 	api *API
 }
 
+// ////////////////////////////////////////////////////////////////////////////////// //
+
 // DOCS: https://github.com/ssllabs/ssllabs-scan/blob/master/ssllabs-api-docs-v4.md
 
 type RegisterRequest struct {
@@ -179,6 +182,11 @@ type RegisterRequest struct {
 	LastName     string `json:"lastName"`
 	Email        string `json:"email"`
 	Organization string `json:"organization"`
+}
+
+type RegisterResponse struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
 }
 
 type Info struct {
@@ -552,7 +560,7 @@ func NewAPI(name, version, email string) (*API, error) {
 	api.Engine.Client.Timeout = 10 * time.Second
 
 	info := &Info{}
-	err := api.doRequest(API_URL_INFO, info)
+	err := api.doRequest(API_URL_INFO, nil, info)
 
 	if err != nil {
 		return nil, err
@@ -565,6 +573,29 @@ func NewAPI(name, version, email string) (*API, error) {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+// Register sends registration request with given data
+func (a *API) Register(reg *RegisterRequest) (*RegisterResponse, error) {
+	switch {
+	case a == nil:
+		return nil, ErrInvalid
+	case reg == nil:
+		return nil, fmt.Errorf("Register request invalid: request is nil")
+	case reg.FirstName == "":
+		return nil, fmt.Errorf("Register request invalid: first name is empty")
+	case reg.LastName == "":
+		return nil, fmt.Errorf("Register request invalid: last name is empty")
+	case reg.Email == "":
+		return nil, fmt.Errorf("Register request invalid: email is empty")
+	case reg.Organization == "":
+		return nil, fmt.Errorf("Register request invalid: organization is empty")
+	}
+
+	response := &RegisterResponse{}
+	err := a.doRequest(API_URL_REGISTER, reg, response)
+
+	return response, err
+}
+
 // Analyze starts check for host
 func (a *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, error) {
 	if a == nil {
@@ -574,7 +605,7 @@ func (a *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, erro
 	progress := &AnalyzeProgress{host: host, api: a, maxAge: params.MaxAge}
 	query := "host=" + host + params.ToQuery()
 
-	err := a.doRequest(API_URL_ANALYZE+"?"+query, nil)
+	err := a.doRequest(API_URL_ANALYZE+"?"+query, nil, nil)
 
 	if err != nil {
 		return nil, err
@@ -604,7 +635,7 @@ func (p *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) {
 	}
 
 	info := &AnalyzeInfo{}
-	err := p.api.doRequest(API_URL_ANALYZE+"?"+query, info)
+	err := p.api.doRequest(API_URL_ANALYZE+"?"+query, nil, info)
 
 	if err != nil {
 		return nil, err
@@ -646,7 +677,7 @@ func (p *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*EndpointI
 	}
 
 	info := &EndpointInfo{}
-	err = p.api.doRequest(API_URL_DETAILED+"?"+query, info)
+	err = p.api.doRequest(API_URL_DETAILED+"?"+query, nil, info)
 
 	if err != nil {
 		return nil, err
@@ -660,11 +691,13 @@ func (p *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*EndpointI
 // ToError converts API errors object into error
 func (e *APIErrors) ToError() error {
 	for _, err := range e.Errors {
-		return fmt.Errorf("[%s] %s", err.Field, err.Message)
+		return fmt.Errorf("%s", err.Message)
 	}
 
 	return nil
 }
+
+// ////////////////////////////////////////////////////////////////////////////////// //
 
 // String combines params into query
 func (p AnalyzeParams) ToQuery() string {
@@ -690,15 +723,20 @@ func (p AnalyzeParams) ToQuery() string {
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // doRequest sends request using http client
-func (a *API) doRequest(uri string, result any) error {
-	resp, err := a.Engine.Get(
-		req.Request{
-			URL: uri,
-			Headers: req.Headers{
-				"email": a.email,
-			},
+func (a *API) doRequest(uri string, request, response any) error {
+	r := req.Request{
+		URL: uri,
+		Headers: req.Headers{
+			"email": a.email,
 		},
-	)
+	}
+
+	if request != nil {
+		r.ContentType = req.CONTENT_TYPE_JSON
+		r.Body = request
+	}
+
+	resp, err := a.Engine.Get(r)
 
 	defer resp.Discard()
 
@@ -717,11 +755,11 @@ func (a *API) doRequest(uri string, result any) error {
 		return errs.ToError()
 	}
 
-	if result == nil {
+	if response == nil {
 		return nil
 	}
 
-	return resp.JSON(result)
+	return resp.JSON(response)
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
