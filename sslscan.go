@@ -725,18 +725,18 @@ func (p AnalyzeParams) ToQuery() string {
 // doRequest sends request using http client
 func (a *API) doRequest(uri string, request, response any) error {
 	r := req.Request{
-		URL: uri,
-		Headers: req.Headers{
-			"email": a.email,
-		},
+		Method:  req.GET,
+		URL:     uri,
+		Headers: req.Headers{"email": a.email},
 	}
 
 	if request != nil {
+		r.Method = req.POST
 		r.ContentType = req.CONTENT_TYPE_JSON
 		r.Body = request
 	}
 
-	resp, err := a.Engine.Get(r)
+	resp, err := a.Engine.Do(r)
 
 	defer resp.Discard()
 
