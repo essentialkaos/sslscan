@@ -1,8 +1,8 @@
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/essentialkaos/check v1.4.0 h1:kWdFxu9odCxUqo1NNFNJmguGrDHgwi3A8daXX1nkuKk=
 github.com/essentialkaos/check v1.4.0/go.mod h1:LMKPZ2H+9PXe7Y2gEoKyVAwUqXVgx7KtgibfsHJPus0=
-github.com/essentialkaos/ek/v13 v13.0.0 h1:faCwsJO5WL3nBzl21XB7Oy/if3Jk7gW+V1pinQvAgRs=
-github.com/essentialkaos/ek/v13 v13.0.0/go.mod h1:jPMvD31Rsu3bxWHrB1l57pZhnjbHLBIfmkWLJgySids=
+github.com/essentialkaos/ek/v13 v13.1.0 h1:k0X7805R2z5QVBCYzGgApWosnpmBdb+00B4rc2tEGVA=
+github.com/essentialkaos/ek/v13 v13.1.0/go.mod h1:RVf1NpNyK04xkBJ3NTUD1wNLWemY9/naVD4iEVjU2fA=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
