@@ -3,8 +3,8 @@ module github.com/essentialkaos/sslscan/v14
 go 1.22.8
 
 require (
-	github.com/essentialkaos/check v1.4.0
-	github.com/essentialkaos/ek/v13 v13.6.0
+	github.com/essentialkaos/check v1.4.1
+	github.com/essentialkaos/ek/v13 v13.8.0
 )
 
 require (
