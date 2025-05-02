@@ -23,7 +23,7 @@ Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API ([
 
 ### Contributing
 
-Before contributing to this project please read our [Contributing Guidelines](https://github.com/essentialkaos/contributing-guidelines#contributing-guidelines).
+Before contributing to this project please read our [Contributing Guidelines](https://github.com/essentialkaos/.github/blob/master/CONTRIBUTING.md).
 
 ### Terms of Use
 
