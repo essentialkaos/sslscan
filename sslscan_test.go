@@ -113,14 +113,14 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	fmt.Printf("Progress: ∙")
 
-	lastSuccess = time.Now()
-
 	for range time.NewTicker(5 * time.Second).C {
 		info, err = progress.Info(false, false)
 
-		if info != nil && err == nil {
-			lastSuccess = time.Now()
+		if info == nil || err != nil {
+			continue
 		}
+
+		lastSuccess = time.Now()
 
 		if info.Status == STATUS_ERROR {
 			c.Fatal(info.StatusMessage)
@@ -165,11 +165,11 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.HostStartTime, check.Not(check.Equals), 0)
 
 	c.Assert(details.CertChains, check.Not(check.HasLen), 0)
-	c.Assert(details.CertChains[0].ID, check.Equals, "333e0e5e8e3f9b0cd30fc82e0e136e5d2eefb63d7ff08e48fee7fff467d55103")
+	c.Assert(details.CertChains[0].ID, check.Equals, "da6f6e74c248cd1ff4f1b2b388bf07cb8c01c1253888119e1e984b2c8d204f3f")
 	c.Assert(details.CertChains[0].CertIDs, check.Not(check.HasLen), 0)
-	c.Assert(details.CertChains[0].CertIDs[0], check.Equals, "e08e4417399dd6366eaf8fa4e0a6677d3514effaaa2549430edc86f85dad345a")
+	c.Assert(details.CertChains[0].CertIDs[0], check.Equals, "6157d9d5f6066c0085aa9e487f3ae7c94a6778b8f76ddca9c8539e730386f45f")
 	c.Assert(details.CertChains[0].TrustPaths, check.Not(check.HasLen), 0)
-	c.Assert(details.CertChains[0].TrustPaths[0].CertIDs[0], check.Equals, "e08e4417399dd6366eaf8fa4e0a6677d3514effaaa2549430edc86f85dad345a")
+	c.Assert(details.CertChains[0].TrustPaths[0].CertIDs[0], check.Equals, "6157d9d5f6066c0085aa9e487f3ae7c94a6778b8f76ddca9c8539e730386f45f")
 	c.Assert(details.CertChains[0].TrustPaths[0].Trust[0].RootStore, check.Equals, "Mozilla")
 	c.Assert(details.CertChains[0].TrustPaths[0].Trust[0].IsTrusted, check.Equals, true)
 	c.Assert(details.CertChains[0].Issues, check.Equals, 0)
@@ -251,7 +251,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(details.SIMS.Results[16].NamedGroupID, check.Equals, 29)
 	c.Assert(details.SIMS.Results[16].NamedGroupName, check.Equals, "x25519")
 
-	c.Assert(details.ServerSignature, check.Equals, "GitHub.com")
+	c.Assert(details.ServerSignature, check.Equals, "github.com")
 	c.Assert(details.PrefixDelegation, check.Equals, false)
 	c.Assert(details.NonPrefixDelegation, check.Equals, true)
 	c.Assert(details.VulnBeast, check.Equals, false)
@@ -323,13 +323,13 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	certs := fullInfo.Certs
 
 	c.Assert(certs, check.HasLen, 9)
-	c.Assert(certs[0].ID, check.Equals, "e08e4417399dd6366eaf8fa4e0a6677d3514effaaa2549430edc86f85dad345a")
+	c.Assert(certs[0].ID, check.Equals, "6157d9d5f6066c0085aa9e487f3ae7c94a6778b8f76ddca9c8539e730386f45f")
 	c.Assert(certs[0].Subject, check.Not(check.Equals), "")
-	c.Assert(certs[0].SerialNumber, check.Equals, "008bc849c01d71e66216c65c99426479a5")
+	c.Assert(certs[0].SerialNumber, check.Equals, "145d04b46500c429ccf3fb43a33fafd2")
 	c.Assert(certs[0].CommonNames, check.DeepEquals, []string{"github.com"})
 	c.Assert(certs[0].AltNames, check.DeepEquals, []string{"github.com", "www.github.com"})
-	c.Assert(certs[0].NotBefore, check.Equals, int64(1712620800000))
-	c.Assert(certs[0].NotAfter, check.Equals, int64(1744243199000))
+	c.Assert(certs[0].NotBefore, check.Equals, int64(1741564800000))
+	c.Assert(certs[0].NotAfter, check.Equals, int64(1773187199000))
 	c.Assert(certs[0].IssuerSubject, check.Equals, "CN=Sectigo RSA Domain Validation Secure Server CA, O=Sectigo Limited, L=Salford, ST=Greater Manchester, C=GB")
 	c.Assert(certs[0].SigAlg, check.Equals, "SHA256withRSA")
 	c.Assert(certs[0].RevocationInfo, check.Equals, 2)
@@ -343,9 +343,9 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 	c.Assert(certs[0].ValidationType, check.Equals, "")
 	c.Assert(certs[0].Issues, check.Equals, 0)
 	c.Assert(certs[0].SCT, check.Equals, true)
-	c.Assert(certs[0].SHA1Hash, check.Equals, "16b19284e8d63e818e28c9db0ac88cb54bc8fff2")
-	c.Assert(certs[0].SHA256Hash, check.Equals, "e08e4417399dd6366eaf8fa4e0a6677d3514effaaa2549430edc86f85dad345a")
-	c.Assert(certs[0].PINSHA256, check.Equals, "37hpeOriALBxTwq9sqIkx57jO6ehK2Em4op9C1PPY8A=")
+	c.Assert(certs[0].SHA1Hash, check.Equals, "2fa036d645d7be5369a33b7c667d0b336d882f1c")
+	c.Assert(certs[0].SHA256Hash, check.Equals, "6157d9d5f6066c0085aa9e487f3ae7c94a6778b8f76ddca9c8539e730386f45f")
+	c.Assert(certs[0].PINSHA256, check.Equals, "1jXwPJjk3SAhvkPxGFQ0VP8KMMN1FEFUNBOz2uaHHGk=")
 	c.Assert(certs[0].KeyAlg, check.Equals, "RSA")
 	c.Assert(certs[0].KeySize, check.Equals, 4096)
 	c.Assert(certs[0].KeyStrength, check.Equals, 4096)

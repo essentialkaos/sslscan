@@ -13,7 +13,12 @@ import (
 	"time"
 
 	"github.com/essentialkaos/ek/v13/req"
+	"github.com/essentialkaos/ek/v13/strutil"
 )
+
+// ////////////////////////////////////////////////////////////////////////////////// //
+
+const VERSION = "14"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -549,18 +554,15 @@ func NewAPI(name, version, email string) (*API, error) {
 		return nil, ErrEmptyEmail
 	}
 
-	api := &API{
-		Engine: &req.Engine{},
-		email:  email,
-	}
+	api := &API{Engine: &req.Engine{}, email: email}
 
 	api.Engine.Init()
-	api.Engine.SetUserAgent(name, version, "SSLScan/14")
+	api.Engine.SetUserAgent(name, version, "SSLScan/"+VERSION)
 
 	api.Engine.Client.Timeout = 10 * time.Second
 
 	info := &Info{}
-	err := api.doRequest(API_URL_INFO, nil, info)
+	err := api.doRequest(API_URL_INFO, nil, nil, info)
 
 	if err != nil {
 		return nil, err
@@ -591,7 +593,7 @@ func (a *API) Register(reg *RegisterRequest) (*RegisterResponse, error) {
 	}
 
 	response := &RegisterResponse{}
-	err := a.doRequest(API_URL_REGISTER, reg, response)
+	err := a.doRequest(API_URL_REGISTER, nil, reg, response)
 
 	return response, err
 }
@@ -603,9 +605,11 @@ func (a *API) Analyze(host string, params AnalyzeParams) (*AnalyzeProgress, erro
 	}
 
 	progress := &AnalyzeProgress{host: host, api: a, maxAge: params.MaxAge}
-	query := "host=" + host + params.ToQuery()
 
-	err := a.doRequest(API_URL_ANALYZE+"?"+query, nil, nil)
+	query := params.ToQuery()
+	query.Set("host", host)
+
+	err := a.doRequest(API_URL_ANALYZE, query, nil, nil)
 
 	if err != nil {
 		return nil, err
@@ -620,22 +624,13 @@ func (p *AnalyzeProgress) Info(detailed, fromCache bool) (*AnalyzeInfo, error) {
 		return nil, ErrInvalid
 	}
 
-	query := "host=" + p.host
-
-	if detailed {
-		query += "&all=on"
-	}
-
-	if fromCache {
-		query += "&fromCache=" + formatBoolParam(fromCache)
-
-		if p.maxAge > 0 {
-			query += "&maxAge=" + fmt.Sprintf("%d", p.maxAge)
-		}
-	}
+	query := req.Query{"host": p.host}
+	query.SetIf(detailed, "all", formatBoolParam(detailed))
+	query.SetIf(fromCache, "fromCache", formatBoolParam(fromCache))
+	query.SetIf(fromCache && p.maxAge > 0, "maxAge", fmt.Sprintf("%d", p.maxAge))
 
 	info := &AnalyzeInfo{}
-	err := p.api.doRequest(API_URL_ANALYZE+"?"+query, nil, info)
+	err := p.api.doRequest(API_URL_ANALYZE, query, nil, info)
 
 	if err != nil {
 		return nil, err
@@ -666,18 +661,16 @@ func (p *AnalyzeProgress) GetEndpointInfo(ip string, fromCache bool) (*EndpointI
 		}
 	}
 
-	query := "host=" + p.host + "&s=" + ip
-
-	if fromCache {
-		query += "&fromCache=" + formatBoolParam(fromCache)
-
-		if p.maxAge > 0 {
-			query += "&maxAge=" + fmt.Sprintf("%d", p.maxAge)
-		}
+	query := req.Query{
+		"host": p.host,
+		"s":    ip,
 	}
 
+	query.SetIf(fromCache, "fromCache", formatBoolParam(fromCache))
+	query.SetIf(fromCache && p.maxAge > 0, "maxAge", fmt.Sprintf("%d", p.maxAge))
+
 	info := &EndpointInfo{}
-	err = p.api.doRequest(API_URL_DETAILED+"?"+query, nil, info)
+	err = p.api.doRequest(API_URL_DETAILED, query, nil, info)
 
 	if err != nil {
 		return nil, err
@@ -699,35 +692,32 @@ func (e *APIErrors) ToError() error {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// String combines params into query
-func (p AnalyzeParams) ToQuery() string {
-	var result string
-
-	result += "publish=" + formatBoolParam(p.Public) + "&"
-	result += "startNew=" + formatBoolParam(p.StartNew) + "&"
-	result += "fromCache=" + formatBoolParam(p.FromCache) + "&"
+// ToQuery converts params into request query
+func (p AnalyzeParams) ToQuery() req.Query {
+	query := req.Query{
+		"publish":        formatBoolParam(p.Public),
+		"startNew":       formatBoolParam(p.StartNew),
+		"fromCache":      formatBoolParam(p.FromCache),
+		"ignoreMismatch": formatBoolParam(p.IgnoreMismatch),
+	}
 
 	if p.MaxAge != 0 {
-		result += "maxAge=" + fmt.Sprintf("%d", p.MaxAge) + "&"
+		query.Set("maxAge", fmt.Sprintf("%d", p.MaxAge))
 	}
 
-	result += "ignoreMismatch=" + formatBoolParam(p.IgnoreMismatch)
-
-	if len(result) != 0 {
-		return "&" + result
-	}
-
-	return ""
+	return query
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // doRequest sends request using http client
-func (a *API) doRequest(uri string, request, response any) error {
+func (a *API) doRequest(url string, query req.Query, request, response any) error {
 	r := req.Request{
 		Method:  req.GET,
-		URL:     uri,
+		URL:     url,
+		Query:   query,
 		Headers: req.Headers{"email": a.email},
+		Accept:  req.CONTENT_TYPE_JSON,
 	}
 
 	if request != nil {
@@ -766,9 +756,5 @@ func (a *API) doRequest(uri string, request, response any) error {
 
 // formatBoolParam formats boolean parameter
 func formatBoolParam(v bool) string {
-	if v == false {
-		return "off"
-	}
-
-	return "on"
+	return strutil.B(v, "on", "off")
 }
