@@ -113,14 +113,14 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	fmt.Printf("Progress: ∙")
 
-	lastSuccess = time.Now()
-
 	for range time.NewTicker(5 * time.Second).C {
 		info, err = progress.Info(false, false)
 
-		if info != nil && err == nil {
-			lastSuccess = time.Now()
+		if info == nil || err != nil {
+			continue
 		}
+
+		lastSuccess = time.Now()
 
 		if info.Status == STATUS_ERROR {
 			c.Fatal(info.StatusMessage)
