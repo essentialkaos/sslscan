@@ -2,7 +2,6 @@
 
 <p align="center">
   <a href="https://kaos.sh/g/sslscan.v14"><img src=".github/images/godoc.svg"/></a>
-  <a href="https://kaos.sh/l/sslscan"><img src="https://kaos.sh/l/35f63606e26d8588f906.svg" alt="Code Climate Maintainability" /></a>
   <a href="https://kaos.sh/w/sslscan/ci"><img src="https://kaos.sh/w/sslscan/ci.svg" alt="GitHub Actions CI Status" /></a>
   <a href="https://kaos.sh/w/sslscan/codeql"><img src="https://kaos.sh/w/sslscan/codeql.svg" alt="GitHub Actions CodeQL Status" /></a>
   <a href="#license"><img src=".github/images/license.svg"/></a>
@@ -38,4 +37,4 @@ Also you should:
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-<p align="center"><a href="https://essentialkaos.com"><img src="https://gh.kaos.st/ekgh.svg"/></a></p>
+<p align="center"><a href="https://kaos.dev"><img src="https://raw.githubusercontent.com/essentialkaos/.github/refs/heads/master/images/ekgh.svg"/></a></p>
