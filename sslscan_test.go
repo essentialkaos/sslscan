@@ -2,7 +2,7 @@ package sslscan
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
+//                         Copyright (c) 2025 ESSENTIAL KAOS                          //
 //      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -73,7 +73,7 @@ func (s *SSLLabsSuite) TestInfo(c *check.C) {
 
 	c.Assert(api, check.NotNil)
 
-	c.Assert(api.Info.EngineVersion, check.Equals, "2.3.1")
+	c.Assert(api.Info.EngineVersion, check.Equals, "2.4.1")
 	c.Assert(api.Info.CriteriaVersion, check.Equals, "2009q")
 }
 
