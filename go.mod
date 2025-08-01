@@ -1,10 +1,10 @@
 module github.com/essentialkaos/sslscan/v14
 
-go 1.23.6
+go 1.23.10
 
 require (
 	github.com/essentialkaos/check v1.4.1
-	github.com/essentialkaos/ek/v13 v13.31.3
+	github.com/essentialkaos/ek/v13 v13.32.0
 )
 
 require (
