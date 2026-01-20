@@ -322,7 +322,7 @@ func (s *SSLLabsSuite) TestAnalyze(c *check.C) {
 
 	certs := fullInfo.Certs
 
-	c.Assert(certs, check.HasLen, 9)
+	c.Assert(certs, check.HasLen, 11)
 	c.Assert(certs[0].ID, check.Equals, "6157d9d5f6066c0085aa9e487f3ae7c94a6778b8f76ddca9c8539e730386f45f")
 	c.Assert(certs[0].Subject, check.Not(check.Equals), "")
 	c.Assert(certs[0].SerialNumber, check.Equals, "145d04b46500c429ccf3fb43a33fafd2")
