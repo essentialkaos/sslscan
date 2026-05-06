@@ -2,8 +2,8 @@
 
 <p align="center">
   <a href="https://kaos.sh/g/sslscan.v14"><img src=".github/images/godoc.svg"/></a>
-  <a href="https://kaos.sh/w/sslscan/ci"><img src="https://kaos.sh/w/sslscan/ci.svg" alt="GitHub Actions CI Status" /></a>
-  <a href="https://kaos.sh/w/sslscan/codeql"><img src="https://kaos.sh/w/sslscan/codeql.svg" alt="GitHub Actions CodeQL Status" /></a>
+  <a href="https://kaos.sh/w/sslscan/ci"><img src="https://github.com/essentialkaos/sslscan/actions/workflows/ci.yml/badge.svg" alt="GitHub Actions CI Status" /></a>
+  <a href="https://kaos.sh/w/sslscan/codeql"><img src="https://github.com/essentialkaos/sslscan/actions/workflows/codeql.yml/badge.svg" alt="GitHub Actions CodeQL Status" /></a>
   <a href="#license"><img src=".github/images/license.svg"/></a>
 </p>
 
@@ -17,8 +17,8 @@ Package for Go for working with [SSLLabs](https://www.ssllabs.com) public API ([
 
 | Branch | Status |
 |--------|--------|
-| `master` | [![CI](https://kaos.sh/w/sslscan/ci.svg?branch=master)](https://kaos.sh/w/sslscan/ci?query=branch:master) |
-| `develop` | [![CI](https://kaos.sh/w/sslscan/ci.svg?branch=develop)](https://kaos.sh/w/sslscan/ci?query=branch:develop) |
+| `master` | [![CI](https://github.com/essentialkaos/sslscan/actions/workflows/ci.yml/badge.svg?branch=master)](https://kaos.sh/w/sslscan/ci?query=branch:master) |
+| `develop` | [![CI](https://github.com/essentialkaos/sslscan/actions/workflows/ci.yml/badge.svg?branch=develop)](https://kaos.sh/w/sslscan/ci?query=branch:develop) |
 
 ### Contributing
 

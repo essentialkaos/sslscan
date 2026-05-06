@@ -1,2 +1,2 @@
 [files]
-extend-exclude = ["go.sum"]
+extend-exclude = ["go.sum", "responses/*"]
