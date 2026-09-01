@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/essentialkaos/check v1.4.1
-	github.com/essentialkaos/ek/v14 v14.4.2
+	github.com/essentialkaos/ek/v14 v14.4.3
 )
 
 require (
